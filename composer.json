@@ -18,10 +18,10 @@
         "php": ">=7.0",
         "ext-pdo": "*",
         "doctrine/orm": "^2",
-        "vain/core": "dev-master",
-        "vain/connection" : "dev-master",
-        "vain/database" : "dev-master",
-        "vain/redis" : "dev-master"
+        "vain/core": "^0.3",
+        "vain/connection" : "^0.3",
+        "vain/database" : "^0.3",
+        "vain/redis" : "^0.3"
     },
     "repositories": [
         {
