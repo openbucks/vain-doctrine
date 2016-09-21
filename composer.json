@@ -1,0 +1,37 @@
+{
+    "name": "vain/doctrine",
+    "type": "shared-package",
+    "authors": [
+        {
+            "name": "Taras Girnyk",
+            "email": "taras.p.gyrnik@gmail.com",
+            "homepage": "https://github.com/allflame/vain-doctrine",
+            "role": "Maintainer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Vain\\Doctrine\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.0",
+        "ext-pdo": "*",
+        "doctrine/orm": "^2",
+        "vain/core": "dev-master",
+        "vain/connection" : "dev-master",
+        "vain/database" : "dev-master",
+        "vain/redis" : "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://78.140.176.167"
+        }
+    ],
+    "config": {
+        "secure-http": false
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}

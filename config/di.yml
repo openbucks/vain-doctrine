@@ -1,0 +1,35 @@
+parameters:
+  doctrine.connection.name: 'doctrine'
+  doctrine.database.name: 'doctrine'
+  doctrine.entity.maps: []
+
+services:
+  doctrine.entity.manager:
+    class: Doctrine\ORM\EntityManager
+    arguments: ['@database.mvcc', '@doctrine.config', '@doctrine.event.manager']
+  doctrine.config:
+    class: Doctrine\ORM\Configuration
+    factory: ['@doctrine.config.factory', getConfiguration]
+  doctrine.config.factory:
+    class: Vain\Doctrine\Factory\DoctrineConfigurationFactory
+    arguments: ['@doctrine.cache', '%app.env%', '%doctrine.entity.maps%']
+  doctrine.event.manager:
+    class: Doctrine\Common\EventManager
+  connection.factory.doctrine:
+    class: Vain\Doctrine\Factory\DoctrineConnectionFactory
+    arguments: ['pdo.doctrine']
+    tags:
+      - {name: connection.factory}
+  doctrine.connection.pdo:
+    class: PDOConnection
+    factory: ['@connection.storage', getConnection]
+    arguments:
+      - '%doctrine.connection.name%'
+  database.factory.doctrine:
+    class: Vain\Doctrine\Factory\DoctrineDatabaseFactory
+    arguments: ['@doctrine.config', '@doctrine.event.manager', '@doctrine.connection.pdo', '@database.generator.factory', '%doctrine.database.name%']
+    tags:
+      - {name: database.factory}
+  doctrine.cache.redis:
+    class: Vain\Doctrine\Cache\Redis\DoctrineRedisCache
+    arguments: ['@app.cache.redis']
