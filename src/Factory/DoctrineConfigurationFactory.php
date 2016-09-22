@@ -24,19 +24,6 @@ use Doctrine\ORM\Configuration as DoctrineORMConfiguration;
  */
 class DoctrineConfigurationFactory
 {
-    private $doctrineCache;
-
-    /**
-     * DoctrineConfigurationFactory constructor.
-     *
-     * @param DoctrineCacheInterface $doctrineCache
-     */
-    public function __construct(
-        DoctrineCacheInterface $doctrineCache
-    ) {
-        $this->doctrineCache = $doctrineCache;
-    }
-
     /**
      * @param DoctrineCacheInterface $doctrineCache
      * @param string                 $applicationEnv
