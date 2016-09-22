@@ -15,6 +15,7 @@ namespace Vain\Doctrine\Factory;
 use Doctrine\Common\Cache\Cache as DoctrineCacheInterface;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Configuration as DoctrineORMConfiguration;
 
 /**
  * Class DoctrineConfigurationFactory
@@ -25,47 +26,40 @@ class DoctrineConfigurationFactory
 {
     private $doctrineCache;
 
-    private $paths;
-
-    private $applicationEnv;
-
     /**
      * DoctrineConfigurationFactory constructor.
      *
      * @param DoctrineCacheInterface $doctrineCache
-     * @param string                 $applicationEnv
-     * @param array                  $paths
      */
-    public function __construct(DoctrineCacheInterface $doctrineCache, string $applicationEnv, array $paths = [])
-    {
+    public function __construct(
+        DoctrineCacheInterface $doctrineCache
+    ) {
         $this->doctrineCache = $doctrineCache;
-        $this->paths = $paths;
-        $this->applicationEnv = $applicationEnv;
     }
 
     /**
-     * @param string $path
+     * @param DoctrineCacheInterface $doctrineCache
+     * @param string                 $applicationEnv
+     * @param string                 $configDir
+     * @param string                 $globalFileName
+     * @param string                 $extension
      *
-     * @return DoctrineConfigurationFactory
+     * @return DoctrineORMConfiguration
      */
-    public function addPath(string $path) : DoctrineConfigurationFactory
-    {
-        $this->paths[] = $path;
-
-        return $this;
-    }
-
-    /**
-     * @return \Doctrine\ORM\Configuration
-     */
-    public function getConfiguration()
-    {
-        $driver = new SimplifiedYamlDriver($this->paths, '.yml');
+    public function getConfiguration(
+        DoctrineCacheInterface $doctrineCache,
+        string $applicationEnv,
+        string $configDir,
+        string $globalFileName,
+        string $extension
+    ) : DoctrineORMConfiguration {
+        $driver = new SimplifiedYamlDriver([$configDir => ''], $extension);
+        $driver->setGlobalBasename($globalFileName);
 
         $config = Setup::createConfiguration(
-            'dev' === $this->applicationEnv,
+            'dev' === $applicationEnv,
             null,
-            $this->doctrineCache
+            $doctrineCache
         );
         $config->setMetadataDriverImpl($driver);
 
