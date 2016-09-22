@@ -6,7 +6,11 @@ parameters:
 services:
   doctrine.entity.manager:
     class: Doctrine\ORM\EntityManager
-    arguments: ['@database.mvcc', '@doctrine.config', '@doctrine.event.manager']
+    factory: ['@doctrine.entity.manager.factory', 'create']
+    arguments:
+      - '@database.mvcc'
+      - '@doctrine.config'
+      - '@doctrine.event.manager'
   doctrine.config:
     class: Doctrine\ORM\Configuration
     factory: ['@doctrine.config.factory', getConfiguration]
@@ -33,3 +37,5 @@ services:
   doctrine.cache.redis:
     class: Vain\Doctrine\Cache\Redis\DoctrineRedisCache
     arguments: ['@app.cache.redis']
+  doctrine.entity.manager.factory:
+    class: Vain\Doctrine\Factory\DoctrineEntityManagerFactory
