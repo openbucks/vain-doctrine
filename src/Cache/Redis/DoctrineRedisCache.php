@@ -22,7 +22,6 @@ use Vain\Redis\RedisInterface;
  */
 class DoctrineRedisCache extends DoctrineCacheProvider
 {
-
     private $redis;
 
     /**
@@ -40,7 +39,11 @@ class DoctrineRedisCache extends DoctrineCacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->redis->get($id);
+        if (null === ($result = $this->redis->get($id))) {
+            return false;
+        }
+
+        return $result;
     }
 
     /**
@@ -87,11 +90,11 @@ class DoctrineRedisCache extends DoctrineCacheProvider
         $info = $this->redis->info();
 
         return [
-            Cache::STATS_HITS   => $info['keyspace_hits'],
-            Cache::STATS_MISSES => $info['keyspace_misses'],
-            Cache::STATS_UPTIME => $info['uptime_in_seconds'],
-            Cache::STATS_MEMORY_USAGE      => $info['used_memory'],
-            Cache::STATS_MEMORY_AVAILABLE  => false
+            Cache::STATS_HITS             => $info['keyspace_hits'],
+            Cache::STATS_MISSES           => $info['keyspace_misses'],
+            Cache::STATS_UPTIME           => $info['uptime_in_seconds'],
+            Cache::STATS_MEMORY_USAGE     => $info['used_memory'],
+            Cache::STATS_MEMORY_AVAILABLE => false,
         ];
     }
 }
