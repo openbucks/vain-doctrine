@@ -13,6 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Factory;
 
 use Doctrine\Common\Cache\Cache as DoctrineCacheInterface;
+use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Tools\Setup;
 
 /**
@@ -59,11 +60,15 @@ class DoctrineConfigurationFactory
      */
     public function getConfiguration()
     {
-        return Setup::createYAMLMetadataConfiguration(
-            $this->paths,
+        $driver = new SimplifiedYamlDriver($this->paths, '.yml');
+
+        $config = Setup::createConfiguration(
             'dev' === $this->applicationEnv,
             null,
             $this->doctrineCache
         );
+        $config->setMetadataDriverImpl($driver);
+
+        return $config;
     }
 }

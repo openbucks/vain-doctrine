@@ -64,7 +64,7 @@ class DoctrineDatabaseFactory extends AbstractDatabaseFactory
     public function createDatabase(array $configData, $connection) : DatabaseInterface
     {
 
-        switch ($connection['driver']) {
+        switch ($configData['driver']) {
             default:
                 $doctrineDriver = new DoctrinePostgresqlDriver($this->pdoInstance);
                 break;
