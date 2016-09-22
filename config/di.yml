@@ -1,7 +1,8 @@
 parameters:
   doctrine.connection.name: 'doctrine'
   doctrine.database.name: 'doctrine'
-  doctrine.entity.maps: []
+  doctrine.entity.map.file: 'entitymap'
+  doctrine.entity.map.extension: '.orm.yml'
 
 services:
   doctrine.entity.manager:
@@ -14,9 +15,14 @@ services:
   doctrine.config:
     class: Doctrine\ORM\Configuration
     factory: ['@doctrine.config.factory', getConfiguration]
+    arguments:
+      - '@doctrine.cache'
+      - '%app.env%'
+      - '%app.dir%/%app.config.dir%'
+      - '%doctrine.entity.map.file%'
+      - '%doctrine.entity.map.extension%'
   doctrine.config.factory:
     class: Vain\Doctrine\Factory\DoctrineConfigurationFactory
-    arguments: ['@doctrine.cache', '%app.env%', '%doctrine.entity.maps%']
   doctrine.event.manager:
     class: Doctrine\Common\EventManager
   connection.factory.doctrine:
