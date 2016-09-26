@@ -45,3 +45,10 @@ services:
     arguments: ['@app.cache.redis']
   doctrine.entity.manager.factory:
     class: Vain\Doctrine\Factory\DoctrineEntityManagerFactory
+  doctrine.entity.operation.factory:
+    class: Vain\Doctrine\Entity\Operation\Factory\DoctrineEntityOperationFactory
+    arguments: ['@doctrine.entity.manager']
+  doctrine.operation.collection.factory:
+    class: Vain\Doctrine\Operation\Collection\Factory\Decorator\DoctrineCollectionFactoryDecorator
+    decorates: operation.collection.factory
+    arguments: ['@doctrine.collection.factory.inner', '@doctrine.entity.manager']
