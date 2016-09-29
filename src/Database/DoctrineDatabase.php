@@ -9,23 +9,23 @@
  * @link      https://github.com/allflame/INFRA
  */
 
-namespace Vain\Doctrine;
+namespace Vain\Doctrine\Database;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
+use Vain\Database\Mvcc\MvccDatabaseInterface;
 use Vain\Doctrine\Cursor\DoctrineCursor;
-use Vain\Database\DatabaseInterface;
 use Vain\Database\Generator\Factory\GeneratorFactoryInterface;
 use Vain\Database\Generator\GeneratorInterface;
 
 /**
- * Class DoctrineConnection
+ * Class DoctrineDatabase
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineAdapter extends Connection implements DatabaseInterface
+class DoctrineDatabase extends Connection implements MvccDatabaseInterface
 {
     private $generatorFactory;
 
@@ -82,7 +82,7 @@ class DoctrineAdapter extends Connection implements DatabaseInterface
     /**
      * @inheritDoc
      */
-    public function runQuery($query, array $bindParams) : GeneratorInterface
+    public function runQuery($query, array $bindParams, array $bindTypeParams = []) : GeneratorInterface
     {
         /**
          * @var Driver\PDOStatement $doctrineStatement

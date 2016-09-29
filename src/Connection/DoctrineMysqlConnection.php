@@ -9,28 +9,28 @@
  * @link      https://github.com/allflame/vain-doctrine
  */
 
-namespace Vain\Doctrine\Driver\Mysql;
+namespace Vain\Doctrine\Connection;
 
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
-use \PDO as PdoInstance;
+use Vain\Pdo\Connection\PdoConnectionInterface;
 
 /**
- * Class DoctrineMysqlDriver
+ * Class DoctrineMysqlConnection
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineMysqlDriver extends AbstractMySQLDriver
+class DoctrineMysqlConnection extends AbstractMySQLDriver
 {
-    private $pdoInstance;
+    private $pdoConnection;
 
     /**
      * PostgresqlDoctrineDriver constructor.
      *
-     * @param PdoInstance $pdoInstance
+     * @param PdoConnectionInterface $pdoConnection
      */
-    public function __construct(PdoInstance $pdoInstance)
+    public function __construct(PdoConnectionInterface $pdoConnection)
     {
-        $this->pdoInstance = $pdoInstance;
+        $this->pdoConnection = $pdoConnection;
     }
 
     /**
@@ -38,7 +38,7 @@ class DoctrineMysqlDriver extends AbstractMySQLDriver
      */
     public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
-        return $this->pdoInstance;
+        return $this->establish();
     }
 
     /**
@@ -47,5 +47,13 @@ class DoctrineMysqlDriver extends AbstractMySQLDriver
     public function getName()
     {
         return 'pdo_mysql';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function establish()
+    {
+        return $this->pdoConnection->establish();
     }
 }
