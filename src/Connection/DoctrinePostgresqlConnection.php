@@ -9,28 +9,29 @@
  * @link      https://github.com/allflame/INFRA
  */
 
-namespace Vain\Doctrine\Driver\Postgresql;
+namespace Vain\Doctrine\Connection;
 
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
-use \PDO as PdoInstance;
+use Vain\Connection\ConnectionInterface;
+use Vain\Pdo\Connection\PdoConnectionInterface;
 
 /**
- * Class DoctrinePostgresqlDriver
+ * Class DoctrinePostgresqlConnection
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrinePostgresqlDriver extends AbstractPostgreSQLDriver
+class DoctrinePostgresqlConnection extends AbstractPostgreSQLDriver implements ConnectionInterface
 {
-    private $pdoInstance;
+    private $pdoConnection;
 
     /**
      * PostgresqlDoctrineDriver constructor.
      *
-     * @param PdoInstance $pdoInstance
+     * @param PdoConnectionInterface $pdoConnection
      */
-    public function __construct(PdoInstance $pdoInstance)
+    public function __construct(PdoConnectionInterface $pdoConnection)
     {
-        $this->pdoInstance = $pdoInstance;
+        $this->pdoConnection = $pdoConnection;
     }
 
     /**
@@ -38,7 +39,7 @@ class DoctrinePostgresqlDriver extends AbstractPostgreSQLDriver
      */
     public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
-        return $this->pdoInstance;
+        return $this->establish();
     }
 
     /**
@@ -47,5 +48,13 @@ class DoctrinePostgresqlDriver extends AbstractPostgreSQLDriver
     public function getName()
     {
         return 'pdo_pgsql';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function establish()
+    {
+        return $this->pdoConnection->establish();
     }
 }
