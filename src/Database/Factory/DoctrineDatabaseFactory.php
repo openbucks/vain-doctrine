@@ -9,13 +9,14 @@
  * @link      https://github.com/allflame/INFRA
  */
 
-namespace Vain\Doctrine\Factory;
+namespace Vain\Doctrine\Database\Factory;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\PDOConnection;
-use Vain\Doctrine\DoctrineAdapter;
-use Vain\Doctrine\Driver\Postgresql\DoctrinePostgresqlDriver;
+use Vain\Connection\ConnectionInterface;
+use Vain\Doctrine\Database\DoctrineDatabase;
 use Vain\Database\DatabaseInterface;
 use Vain\Database\Factory\AbstractDatabaseFactory;
 use Vain\Database\Generator\Factory\GeneratorFactoryInterface;
@@ -61,18 +62,14 @@ class DoctrineDatabaseFactory extends AbstractDatabaseFactory
     /**
      * @inheritDoc
      */
-    public function createDatabase(array $configData, $connection) : DatabaseInterface
+    public function createDatabase(array $configData, ConnectionInterface $connection) : DatabaseInterface
     {
-
-        switch ($configData['driver']) {
-            default:
-                $doctrineDriver = new DoctrinePostgresqlDriver($this->pdoInstance);
-                break;
-        }
-
-        return new DoctrineAdapter(
+        /**
+         * @var Driver $connection
+         */
+        return new DoctrineDatabase(
             $configData,
-            $doctrineDriver,
+            $connection,
             $this->config,
             $this->eventManager,
             $this->generatorFactory
