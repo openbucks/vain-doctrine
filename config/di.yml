@@ -51,4 +51,4 @@ services:
   doctrine.operation.collection.factory:
     class: Vain\Doctrine\Operation\Collection\Factory\Decorator\DoctrineCollectionFactoryDecorator
     decorates: operation.collection.factory
-    arguments: ['@doctrine.collection.factory.inner', '@doctrine.entity.manager']
+    arguments: ['@doctrine.operation.collection.factory.inner', '@doctrine.entity.manager']
