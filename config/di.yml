@@ -27,7 +27,7 @@ services:
     class: Doctrine\Common\EventManager
   connection.factory.doctrine:
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
-    arguments: ['pdo.doctrine']
+    arguments: ['doctrine.pdo', '@connection.factory.pdo']
     tags:
       - {name: connection.factory}
   doctrine.connection.pdo:
@@ -37,7 +37,7 @@ services:
       - '%doctrine.connection.name%'
   database.factory.doctrine:
     class: Vain\Doctrine\Database\Factory\DoctrineDatabaseFactory
-    arguments: ['@doctrine.config', '@doctrine.event.manager', '@doctrine.connection.pdo', '@database.generator.factory', '%doctrine.database.name%']
+    arguments: ['@doctrine.config', '@doctrine.event.manager', '@database.generator.factory', '%doctrine.database.name%']
     tags:
       - {name: database.factory}
   doctrine.cache.redis:
