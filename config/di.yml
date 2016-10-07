@@ -3,6 +3,7 @@ parameters:
   doctrine.database.name: 'doctrine'
   doctrine.entity.map.file: 'entitymap'
   doctrine.entity.map.extension: '.orm.yml'
+  doctrine.config.required.fields: []
 
 services:
   doctrine.entity.manager:
@@ -25,11 +26,16 @@ services:
     class: Vain\Doctrine\Factory\DoctrineConfigurationFactory
   doctrine.event.manager:
     class: Doctrine\Common\EventManager
-  connection.factory.doctrine:
+  connection.factory.doctrine.trust:
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
     arguments: ['doctrine.pdo', '@connection.factory.pdo']
     tags:
       - {name: connection.factory}
+  connection.factory.doctrine.assert:
+    class: Vain\Connection\Factory\Decorator\Assert\ConnectionFactoryAssertDecorator
+    decorates: connection.factory.doctrine.trust
+    arguments: ['@connection.factory.doctrine.assert.inner', '%doctrine.config.required.fields%']
+  connection.factory.doctrine: '@connection.factory.doctrine.assert'
   doctrine.connection.pdo:
     class: PDOConnection
     factory: ['@connection.storage', getConnection]
