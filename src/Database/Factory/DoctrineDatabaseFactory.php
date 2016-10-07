@@ -13,8 +13,7 @@ namespace Vain\Doctrine\Database\Factory;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\Driver;
-use Doctrine\DBAL\Driver\PDOConnection;
+use Doctrine\DBAL\Driver as DoctrineDatabaseDriver;
 use Vain\Connection\ConnectionInterface;
 use Vain\Doctrine\Database\DoctrineDatabase;
 use Vain\Database\DatabaseInterface;
@@ -32,8 +31,6 @@ class DoctrineDatabaseFactory extends AbstractDatabaseFactory
 
     private $eventManager;
 
-    private $pdoInstance;
-
     private $generatorFactory;
 
     /**
@@ -41,20 +38,17 @@ class DoctrineDatabaseFactory extends AbstractDatabaseFactory
      *
      * @param Configuration             $config
      * @param EventManager              $eventManager
-     * @param PDOConnection             $pdoInstance
      * @param GeneratorFactoryInterface $generatorFactory
      * @param string                    $name
      */
     public function __construct(
         Configuration $config,
         EventManager $eventManager,
-        PDOConnection $pdoInstance,
         GeneratorFactoryInterface $generatorFactory,
         string $name
     ) {
         $this->config = $config;
         $this->eventManager = $eventManager;
-        $this->pdoInstance = $pdoInstance;
         $this->generatorFactory = $generatorFactory;
         parent::__construct($name);
     }
@@ -65,7 +59,7 @@ class DoctrineDatabaseFactory extends AbstractDatabaseFactory
     public function createDatabase(array $configData, ConnectionInterface $connection) : DatabaseInterface
     {
         /**
-         * @var Driver $connection
+         * @var DoctrineDatabaseDriver $connection
          */
         return new DoctrineDatabase(
             $configData,
