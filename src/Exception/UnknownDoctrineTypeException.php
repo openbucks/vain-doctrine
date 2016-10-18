@@ -20,7 +20,7 @@ use Vain\Connection\Factory\ConnectionFactoryInterface;
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class UnknownDoctrineDriverException extends ConnectionFactoryException
+class UnknownDoctrineTypeException extends ConnectionFactoryException
 {
     /**
      * UnknownDriverConnectionFactoryException constructor.
@@ -32,7 +32,7 @@ class UnknownDoctrineDriverException extends ConnectionFactoryException
     {
         parent::__construct(
             $connectionFactory,
-            sprintf('Cannot create doctrine connection of unknown driver %s', $driver),
+            sprintf('Cannot create doctrine connection of unknown type %s', $driver),
             0,
             null
         );
