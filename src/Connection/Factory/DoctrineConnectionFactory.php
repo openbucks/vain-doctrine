@@ -15,7 +15,7 @@ use Vain\Connection\ConnectionInterface;
 use Vain\Connection\Factory\AbstractConnectionFactory;
 use Vain\Connection\Factory\ConnectionFactoryInterface;
 use Vain\Doctrine\Connection\DoctrinePostgresqlConnection;
-use Vain\Doctrine\Exception\UnknownDriverConnectionFactoryException;
+use Vain\Doctrine\Exception\UnknownDoctrineDriverException;
 use Vain\Pdo\Connection\PdoConnectionInterface;
 
 /**
@@ -57,7 +57,7 @@ class DoctrineConnectionFactory extends AbstractConnectionFactory
                 return new DoctrinePostgresqlConnection($connection);
                 break;
             default:
-                throw new UnknownDriverConnectionFactoryException($this, $driver);
+                throw new UnknownDoctrineDriverException($this, $driver);
         }
     }
 }

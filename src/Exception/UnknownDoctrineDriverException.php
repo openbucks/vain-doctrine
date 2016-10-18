@@ -16,11 +16,11 @@ use Vain\Connection\Exception\ConnectionFactoryException;
 use Vain\Connection\Factory\ConnectionFactoryInterface;
 
 /**
- * Class UnknownDriverConnectionFactoryException
+ * Class UnknownDoctrineDriverException
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class UnknownDriverConnectionFactoryException extends ConnectionFactoryException
+class UnknownDoctrineDriverException extends ConnectionFactoryException
 {
     /**
      * UnknownDriverConnectionFactoryException constructor.
