@@ -48,7 +48,7 @@ class DoctrineConnectionFactory extends AbstractConnectionFactory
          * @var PdoConnectionInterface $connection
          */
         $connection = $this->pdoConnectionFactory->createConnection($config);
-        $driver = $config['driver'];
+        $driver = $config['type'];
         switch ($driver) {
             case 'pgsql':
                 return new DoctrinePostgresqlConnection($connection);
