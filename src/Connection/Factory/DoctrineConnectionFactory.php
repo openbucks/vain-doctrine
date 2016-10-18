@@ -15,6 +15,8 @@ use Vain\Connection\ConnectionInterface;
 use Vain\Connection\Factory\AbstractConnectionFactory;
 use Vain\Connection\Factory\ConnectionFactoryInterface;
 use Vain\Doctrine\Connection\DoctrinePostgresqlConnection;
+use Vain\Doctrine\Exception\UnknownDriverConnectionFactoryException;
+use Vain\Pdo\Connection\PdoConnectionInterface;
 
 /**
  * Class DoctrineConnectionFactory
@@ -42,6 +44,20 @@ class DoctrineConnectionFactory extends AbstractConnectionFactory
      */
     public function createConnection(array $config) : ConnectionInterface
     {
-        return new DoctrinePostgresqlConnection($this->pdoConnectionFactory->createConnection($config));
+        /**
+         * @var PdoConnectionInterface $connection
+         */
+        $connection = $this->pdoConnectionFactory->createConnection($config);
+        $driver = $config['driver'];
+        switch ($driver) {
+            case 'pgsql':
+                return new DoctrinePostgresqlConnection($connection);
+                break;
+            case 'mysql':
+                return new DoctrinePostgresqlConnection($connection);
+                break;
+            default:
+                throw new UnknownDriverConnectionFactoryException($this, $driver);
+        }
     }
 }
