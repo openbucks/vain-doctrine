@@ -32,9 +32,7 @@ class UnknownDoctrineTypeException extends ConnectionFactoryException
     {
         parent::__construct(
             $connectionFactory,
-            sprintf('Cannot create doctrine connection of unknown type %s', $driver),
-            0,
-            null
+            sprintf('Cannot create doctrine connection of unknown type %s', $driver)
         );
     }
 }
