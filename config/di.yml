@@ -34,7 +34,8 @@ services:
   connection.factory.doctrine.assert:
     class: Vain\Connection\Factory\Decorator\Assert\ConnectionFactoryAssertDecorator
     arguments: ['@connection.factory.doctrine.trust', '%doctrine.config.required.fields%']
-  connection.factory.doctrine: '@connection.factory.doctrine.assert'
+  connection.factory.doctrine:
+    alias: connection.factory.doctrine.assert
   doctrine.connection.pdo:
     class: PDOConnection
     factory: ['@connection.storage', getConnection]
