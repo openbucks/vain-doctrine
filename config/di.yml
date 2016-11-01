@@ -26,16 +26,11 @@ services:
     class: Vain\Doctrine\Factory\DoctrineConfigurationFactory
   doctrine.event.manager:
     class: Doctrine\Common\EventManager
-  connection.factory.doctrine.trust:
+  connection.factory.doctrine:
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
     arguments: ['doctrine.pdo', '@connection.factory.pdo']
     tags:
       - {name: connection.factory}
-  connection.factory.doctrine.assert:
-    class: Vain\Connection\Factory\Decorator\Assert\ConnectionFactoryAssertDecorator
-    arguments: ['@connection.factory.doctrine.trust', '%doctrine.config.required.fields%']
-  connection.factory.doctrine:
-    alias: connection.factory.doctrine.assert
   doctrine.connection.pdo:
     class: PDOConnection
     factory: ['@connection.storage', getConnection]
