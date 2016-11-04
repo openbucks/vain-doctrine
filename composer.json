@@ -17,12 +17,12 @@
     "require": {
         "php": ">=7.0",
         "doctrine/orm": "^2",
-        "vain/core": "^0.3",
-        "vain/connection" : "^0.3",
-        "vain/database" : "^0.3",
-        "vain/entity" : "^0.3",
-        "vain/pdo" : "^0.3",
-        "vain/redis" : "^0.3"
+        "vain/core": "^0.4",
+        "vain/connection" : "^0.4",
+        "vain/database" : "^0.4",
+        "vain/entity" : "^0.4",
+        "vain/pdo" : "^0.4",
+        "vain/redis" : "^0.4"
     },
     "repositories": [
         {
