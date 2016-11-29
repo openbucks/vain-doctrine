@@ -13,6 +13,7 @@ services:
       - '@database.mvcc'
       - '@doctrine.config'
       - '@doctrine.event.manager'
+      - '@time.factory'
   doctrine.config:
     class: Doctrine\ORM\Configuration
     factory: ['@doctrine.config.factory', getConfiguration]

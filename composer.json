@@ -22,7 +22,8 @@
         "vain/database" : "^0.4",
         "vain/entity" : "^0.4",
         "vain/pdo" : "^0.4",
-        "vain/redis" : "^0.4"
+        "vain/redis" : "^0.4",
+        "vain/time" : "^0.4"
     },
     "repositories": [
         {
