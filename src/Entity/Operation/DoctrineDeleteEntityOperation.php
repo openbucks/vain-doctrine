@@ -10,7 +10,7 @@
  */
 declare(strict_types = 1);
 
-namespace Vain\Doctrine\Entity\Operation\Delete;
+namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Entity\EntityInterface;

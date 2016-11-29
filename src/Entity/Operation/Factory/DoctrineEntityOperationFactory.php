@@ -13,9 +13,9 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Entity\Operation\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Vain\Doctrine\Entity\Operation\Create\DoctrineCreateEntityOperation;
-use Vain\Doctrine\Entity\Operation\Delete\DoctrineDeleteEntityOperation;
-use Vain\Doctrine\Entity\Operation\Update\DoctrineUpdateEntityOperation;
+use Vain\Doctrine\Entity\Operation\DoctrineCreateEntityOperation;
+use Vain\Doctrine\Entity\Operation\DoctrineDeleteEntityOperation;
+use Vain\Doctrine\Entity\Operation\DoctrineUpdateEntityOperation;
 use Vain\Entity\EntityInterface;
 use Vain\Entity\Operation\Factory\EntityOperationFactoryInterface;
 use Vain\Operation\OperationInterface;
@@ -51,9 +51,9 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
     /**
      * @inheritDoc
      */
-    public function update(EntityInterface $entity) : OperationInterface
+    public function update(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
     {
-        return new DoctrineUpdateEntityOperation($entity, $this->entityManager);
+        return new DoctrineUpdateEntityOperation($newEntity, $this->entityManager);
     }
 
     /**

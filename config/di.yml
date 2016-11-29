@@ -46,10 +46,10 @@ services:
     arguments: ['@app.cache.redis']
   doctrine.entity.manager.factory:
     class: Vain\Doctrine\Factory\DoctrineEntityManagerFactory
-  doctrine.entity.operation.factory:
+  entity.operation.factory.doctrine:
     class: Vain\Doctrine\Entity\Operation\Factory\DoctrineEntityOperationFactory
     arguments: ['@doctrine.entity.manager']
-  doctrine.operation.collection.factory:
+  operation.collection.factory.doctrine:
     class: Vain\Doctrine\Operation\Collection\Factory\Decorator\DoctrineCollectionFactoryDecorator
     decorates: operation.collection.factory
     decoration_priority: 900

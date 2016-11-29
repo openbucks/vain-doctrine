@@ -10,25 +10,25 @@
  */
 declare(strict_types = 1);
 
-namespace Vain\Doctrine\Entity\Operation\Update;
+namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Entity\EntityInterface;
-use Vain\Entity\Operation\AbstractEntityOperation;
+use Vain\Entity\Operation\Create\AbstractCreateEntityOperation;
 use Vain\Operation\Result\OperationResultInterface;
 use Vain\Operation\Result\Successful\SuccessfulOperationResult;
 
 /**
- * Class DoctrineUpdateEntityOperation
+ * Class DoctrineCreateEntityOperation
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineUpdateEntityOperation extends AbstractEntityOperation
+class DoctrineCreateEntityOperation extends AbstractCreateEntityOperation
 {
     private $entityManager;
 
     /**
-     * DoctrineUpdateEntityOperation constructor.
+     * DoctrineCreateEntityOperation constructor.
      *
      * @param EntityInterface        $entity
      * @param EntityManagerInterface $entityManager
