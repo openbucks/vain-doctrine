@@ -26,7 +26,7 @@ class DoctrineApcuCache extends DoctrineCacheProvider
      */
     protected function doFetch($id)
     {
-        trigger_error(sprintf('Method %s is not implemented', 'doFetch'), E_USER_ERROR);
+        return apcu_fetch($id);
     }
 
     /**
@@ -34,7 +34,7 @@ class DoctrineApcuCache extends DoctrineCacheProvider
      */
     protected function doContains($id)
     {
-        trigger_error(sprintf('Method %s is not implemented', 'doContains'), E_USER_ERROR);
+        return apcu_exists($id);
     }
 
     /**
@@ -42,7 +42,7 @@ class DoctrineApcuCache extends DoctrineCacheProvider
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
-        trigger_error(sprintf('Method %s is not implemented', 'doSave'), E_USER_ERROR);
+        return apcu_store($id, $data, $lifeTime);
     }
 
     /**
@@ -50,7 +50,7 @@ class DoctrineApcuCache extends DoctrineCacheProvider
      */
     protected function doDelete($id)
     {
-        trigger_error(sprintf('Method %s is not implemented', 'doDelete'), E_USER_ERROR);
+        return apcu_delete($id) || ! apcu_exists($id);
     }
 
     /**
@@ -58,7 +58,7 @@ class DoctrineApcuCache extends DoctrineCacheProvider
      */
     protected function doFlush()
     {
-        trigger_error(sprintf('Method %s is not implemented', 'doFlush'), E_USER_ERROR);
+        return apcu_clear_cache();
     }
 
     /**
@@ -66,7 +66,7 @@ class DoctrineApcuCache extends DoctrineCacheProvider
      */
     protected function doGetStats()
     {
-        $info = [];
+        $info = apcu_sma_info();
 
         return [
             Cache::STATS_HITS   => $info['keyspace_hits'],

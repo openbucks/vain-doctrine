@@ -42,6 +42,10 @@ services:
     arguments: ['@doctrine.config', '@doctrine.event.manager', '@database.generator.factory', '%doctrine.database.name%']
     tags:
       - {name: database.factory}
+  doctrine.cache.memory:
+    class: Doctrine\Common\Cache\ArrayCache
+  doctrine.cache.apcu:
+    class: Vain\Doctrine\Cache\Apcu\DoctrineApcuCache
   doctrine.cache.redis:
     class: Vain\Doctrine\Cache\Redis\DoctrineRedisCache
     arguments: ['@app.cache.redis']
