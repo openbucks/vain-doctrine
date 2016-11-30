@@ -15,7 +15,6 @@ namespace Vain\Doctrine\Factory;
 use Doctrine\Common\EventManager as DoctrineEventManager;
 use Doctrine\DBAL\Driver\Connection as DBALDriverConnection;
 use Doctrine\ORM\Configuration as DoctrineORMConfiguration;
-use Doctrine\ORM\EntityManager;
 use Vain\Doctrine\Entity\DoctrineEntityManager;
 use Vain\Time\Factory\TimeFactoryInterface;
 
@@ -42,8 +41,11 @@ class DoctrineEntityManagerFactory
         TimeFactoryInterface $timeFactory
     ) : DoctrineEntityManager
     {
-        return new DoctrineEntityManager(
-            EntityManager::create($connection, $configuration, $eventManager), $timeFactory
+        return DoctrineEntityManager::createWithTimeFactory(
+            $connection,
+            $configuration,
+            $eventManager,
+            $timeFactory
         );
     }
 }
