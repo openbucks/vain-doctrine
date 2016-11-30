@@ -57,5 +57,5 @@ services:
   operation.collection.factory.doctrine:
     class: Vain\Doctrine\Operation\Collection\Factory\Decorator\DoctrineCollectionFactoryDecorator
     decorates: operation.collection.factory
-    decoration_priority: 900
+    decoration_priority: 300
     arguments: ['@operation.collection.factory.doctrine.inner', '@doctrine.entity.manager']
