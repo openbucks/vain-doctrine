@@ -33,15 +33,17 @@ class DoctrineEntityManagerFactory
      * @param DoctrineEventManager     $eventManager
      * @param TimeFactoryInterface     $timeFactory
      *
-     * @return EntityManager
+     * @return DoctrineEntityManager
      */
     public function create(
         DBALDriverConnection $connection,
         DoctrineORMConfiguration $configuration,
         DoctrineEventManager $eventManager,
         TimeFactoryInterface $timeFactory
-    ) : EntityManager
+    ) : DoctrineEntityManager
     {
-        return DoctrineEntityManager::createWithTimeFactory($connection, $configuration, $eventManager, $timeFactory);
+        return new DoctrineEntityManager(
+            EntityManager::create($connection, $configuration, $eventManager), $timeFactory
+        );
     }
 }
