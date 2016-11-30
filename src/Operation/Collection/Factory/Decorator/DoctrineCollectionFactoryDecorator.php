@@ -44,9 +44,8 @@ class DoctrineCollectionFactoryDecorator extends AbstractCollectionFactoryDecora
      */
     public function create(array $operations = []) : CollectionInterface
     {
-        return new DoctrineCollectionDecorator(
-            $this->getCollectionFactory()->create($operations),
-            $this->entityManager
-        );
+        $collection = parent::create($operations);
+
+        return new DoctrineCollectionDecorator($collection, $this->entityManager);
     }
 }
