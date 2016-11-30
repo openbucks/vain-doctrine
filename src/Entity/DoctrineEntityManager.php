@@ -100,7 +100,6 @@ class DoctrineEntityManager extends EntityManager
     {
         if (0 <= $this->flushLevel) {
             $this->flushLevel++;
-
             return $this;
         }
 
@@ -112,8 +111,10 @@ class DoctrineEntityManager extends EntityManager
      */
     public function flush($entity = null)
     {
+        $this->flushLevel--;
+
         if (0 < $this->flushLevel) {
-            $this->flushLevel--;
+            return $this;
         }
 
         if (0 > $this->flushLevel) {
@@ -121,22 +122,8 @@ class DoctrineEntityManager extends EntityManager
         }
 
         parent::flush($entity);
-    }
 
-    /**
-     * @inheritDoc
-     */
-    public function clear($entityName = null)
-    {
-        if (0 < $this->flushLevel) {
-            $this->flushLevel--;
-        }
-
-        if (0 > $this->flushLevel) {
-            throw new LevelIntegrityDoctrineException($this, $this->flushLevel);
-        }
-
-        parent::flush($entityName);
+        return $this;
     }
 
     /**

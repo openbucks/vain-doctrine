@@ -12,11 +12,9 @@ declare(strict_types = 1);
 
 namespace Vain\Doctrine\Operation\Collection\Decorator;
 
-use Doctrine\DBAL\DBALException;
 use Vain\Doctrine\Entity\DoctrineEntityManager;
 use Vain\Operation\Collection\CollectionInterface;
 use Vain\Operation\Collection\Decorator\AbstractCollectionDecorator;
-use Vain\Operation\Result\Failed\FailedOperationResult;
 use Vain\Operation\Result\OperationResultInterface;
 
 /**
@@ -45,20 +43,14 @@ class DoctrineCollectionDecorator extends AbstractCollectionDecorator
      */
     public function execute() : OperationResultInterface
     {
-        try {
-            $this->entityManager->init();
-            $result = $this->getCollection()->execute();
-            if (false === $result->getStatus()) {
-                $this->entityManager->clear();
+        $this->entityManager->init();
 
-                return $result;
-            }
-            $this->entityManager->flush();
-        } catch (DBALException $exception) {
-            $this->entityManager->clear();
-
-            return new FailedOperationResult();
+        $result = $this->getCollection()->execute();
+        if (false === $result->getStatus()) {
+            return $result;
         }
+
+        $this->entityManager->flush();
 
         return $result;
     }
