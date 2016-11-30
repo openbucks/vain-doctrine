@@ -17,6 +17,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Vain\Doctrine\Exception\LevelIntegrityDoctrineException;
 use Vain\Time\Factory\TimeFactoryInterface;
 
 /**
@@ -30,6 +31,8 @@ class DoctrineEntityManager extends EntityManager
      * @var TimeFactoryInterface
      */
     private $timeFactory;
+
+    private $flushLevel = 0;
 
     /**
      * DoctrineEntityManager constructor.
@@ -88,6 +91,52 @@ class DoctrineEntityManager extends EntityManager
         }
 
         return new DoctrineEntityManager($conn, $config, $conn->getEventManager(), $timeFactory);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function init()
+    {
+        if (0 <= $this->flushLevel) {
+            $this->flushLevel++;
+
+            return $this;
+        }
+
+        throw new LevelIntegrityDoctrineException($this, $this->flushLevel);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function flush($entity = null)
+    {
+        if (0 < $this->flushLevel) {
+            $this->flushLevel--;
+        }
+
+        if (0 > $this->flushLevel) {
+            throw new LevelIntegrityDoctrineException($this, $this->flushLevel);
+        }
+
+        parent::flush($entity);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function clear($entityName = null)
+    {
+        if (0 < $this->flushLevel) {
+            $this->flushLevel--;
+        }
+
+        if (0 > $this->flushLevel) {
+            throw new LevelIntegrityDoctrineException($this, $this->flushLevel);
+        }
+
+        parent::flush($entityName);
     }
 
     /**

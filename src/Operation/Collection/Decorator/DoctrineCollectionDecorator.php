@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Operation\Collection\Decorator;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManagerInterface;
+use Vain\Doctrine\Entity\DoctrineEntityManager;
 use Vain\Operation\Collection\CollectionInterface;
 use Vain\Operation\Collection\Decorator\AbstractCollectionDecorator;
 use Vain\Operation\Result\Failed\FailedOperationResult;
@@ -31,15 +31,14 @@ class DoctrineCollectionDecorator extends AbstractCollectionDecorator
     /**
      * DoctrineCollectionDecorator constructor.
      *
-     * @param CollectionInterface    $collection
-     * @param EntityManagerInterface $entityManager
+     * @param CollectionInterface   $collection
+     * @param DoctrineEntityManager $entityManager
      */
-    public function __construct(CollectionInterface $collection, EntityManagerInterface $entityManager)
+    public function __construct(CollectionInterface $collection, DoctrineEntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
         parent::__construct($collection);
     }
-
 
     /**
      * @inheritDoc
@@ -47,9 +46,11 @@ class DoctrineCollectionDecorator extends AbstractCollectionDecorator
     public function execute() : OperationResultInterface
     {
         try {
+            $this->entityManager->init();
             $result = $this->getCollection()->execute();
             if (false === $result->getStatus()) {
                 $this->entityManager->clear();
+
                 return $result;
             }
             $this->entityManager->flush();
