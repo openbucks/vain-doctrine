@@ -53,7 +53,7 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
      */
     public function updateEntity(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
     {
-        return new DoctrineUpdateEntityOperation($newEntity, $this->entityManager);
+        return new DoctrineUpdateEntityOperation($newEntity, $oldEntity, $this->entityManager);
     }
 
     /**

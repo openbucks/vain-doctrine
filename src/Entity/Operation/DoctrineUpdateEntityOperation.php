@@ -30,13 +30,17 @@ class DoctrineUpdateEntityOperation extends AbstractUpdateEntityOperation
     /**
      * DoctrineUpdateEntityOperation constructor.
      *
-     * @param EntityInterface        $entity
+     * @param EntityInterface        $newEntity
+     * @param EntityInterface        $oldEntity
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityInterface $entity, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityInterface $newEntity,
+        EntityInterface $oldEntity,
+        EntityManagerInterface $entityManager
+    ) {
         $this->entityManager = $entityManager;
-        parent::__construct($entity);
+        parent::__construct($newEntity, $oldEntity);
     }
 
     /**
