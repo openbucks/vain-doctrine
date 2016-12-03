@@ -14,7 +14,7 @@ namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Entity\EntityInterface;
-use Vain\Entity\Operation\Delete\AbstractDeleteEntityOperation;
+use Vain\Entity\Operation\AbstractDeleteEntityOperation;
 use Vain\Operation\Result\OperationResultInterface;
 use Vain\Operation\Result\Successful\SuccessfulOperationResult;
 

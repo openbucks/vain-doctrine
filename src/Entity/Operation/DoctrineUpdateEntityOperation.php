@@ -14,7 +14,7 @@ namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Entity\EntityInterface;
-use Vain\Entity\Operation\AbstractEntityOperation;
+use Vain\Entity\Operation\AbstractUpdateEntityOperation;
 use Vain\Operation\Result\OperationResultInterface;
 use Vain\Operation\Result\Successful\SuccessfulOperationResult;
 
@@ -23,7 +23,7 @@ use Vain\Operation\Result\Successful\SuccessfulOperationResult;
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineUpdateEntityOperation extends AbstractEntityOperation
+class DoctrineUpdateEntityOperation extends AbstractUpdateEntityOperation
 {
     private $entityManager;
 

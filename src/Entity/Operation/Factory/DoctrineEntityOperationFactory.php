@@ -43,7 +43,7 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
     /**
      * @inheritDoc
      */
-    public function create(EntityInterface $entity) : OperationInterface
+    public function createEntity(EntityInterface $entity) : OperationInterface
     {
         return new DoctrineCreateEntityOperation($entity, $this->entityManager);
     }
@@ -51,7 +51,7 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
     /**
      * @inheritDoc
      */
-    public function update(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
+    public function updateEntity(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
     {
         return new DoctrineUpdateEntityOperation($newEntity, $this->entityManager);
     }
@@ -59,7 +59,7 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
     /**
      * @inheritDoc
      */
-    public function delete(EntityInterface $entity) : OperationInterface
+    public function deleteEntity(EntityInterface $entity) : OperationInterface
     {
         return new DoctrineDeleteEntityOperation($entity, $this->entityManager);
     }
