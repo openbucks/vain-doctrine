@@ -48,7 +48,7 @@ class DoctrineUpdateEntityOperation extends AbstractUpdateEntityOperation
      */
     public function execute() : OperationResultInterface
     {
-        $this->entityManager->persist($this->getEntity());
+        $this->entityManager->merge($this->getNewEntity());
 
         return new SuccessfulOperationResult();
     }

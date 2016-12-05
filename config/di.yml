@@ -26,7 +26,8 @@ services:
   doctrine.config.factory:
     class: Vain\Doctrine\Factory\DoctrineConfigurationFactory
   doctrine.event.manager:
-    class: Doctrine\Common\EventManager
+    class: Vain\Doctrine\Event\Manager\DoctrineEventManager
+    arguments: ['@time.factory']
   connection.factory.doctrine:
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
     arguments: ['doctrine.pdo', '@connection.factory.pdo']
