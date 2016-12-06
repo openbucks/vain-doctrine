@@ -29,7 +29,7 @@ class VainTime extends Type
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return $platform->getDateTypeDeclarationSQL($fieldDeclaration);
+        return $platform->getDateTimeTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**
