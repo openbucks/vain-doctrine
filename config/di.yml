@@ -61,3 +61,7 @@ services:
     decorates: operation.collection.factory
     decoration_priority: 300
     arguments: ['@operation.collection.factory.doctrine.inner', '@doctrine.entity.manager']
+  doctrine.event.handler:
+    parent: abstract.event.handler
+    class: Vain\Doctrine\Event\DoctrineEventHandler
+    arguments: ['@doctrine.entity.manager']
