@@ -17,7 +17,9 @@ use Vain\Doctrine\Entity\Operation\DoctrineCreateEntityOperation;
 use Vain\Doctrine\Entity\Operation\DoctrineDeleteEntityOperation;
 use Vain\Doctrine\Entity\Operation\DoctrineUpdateEntityOperation;
 use Vain\Entity\EntityInterface;
+use Vain\Entity\Operation\Factory\AbstractEntityOperationFactory;
 use Vain\Entity\Operation\Factory\EntityOperationFactoryInterface;
+use Vain\Operation\Factory\OperationFactoryInterface;
 use Vain\Operation\OperationInterface;
 
 /**
@@ -25,7 +27,7 @@ use Vain\Operation\OperationInterface;
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
+class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory implements EntityOperationFactoryInterface
 {
 
     private $entityManager;
@@ -33,11 +35,13 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
     /**
      * DoctrineEntityOperationFactory constructor.
      *
-     * @param EntityManagerInterface $entityManager
+     * @param OperationFactoryInterface $operationFactory
+     * @param EntityManagerInterface    $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(OperationFactoryInterface $operationFactory, EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+        parent::__construct($operationFactory);
     }
 
     /**
@@ -45,15 +49,15 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
      */
     public function createEntity(EntityInterface $entity) : OperationInterface
     {
-        return new DoctrineCreateEntityOperation($entity, $this->entityManager);
+        return $this->decorate(new DoctrineCreateEntityOperation($entity, $this->entityManager));
     }
 
     /**
      * @inheritDoc
      */
-    public function updateEntity(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
+    public function doUpdateEntity(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
     {
-        return new DoctrineUpdateEntityOperation($newEntity, $oldEntity, $this->entityManager);
+        return $this->decorate(new DoctrineUpdateEntityOperation($newEntity, $oldEntity, $this->entityManager));
     }
 
     /**
@@ -61,6 +65,6 @@ class DoctrineEntityOperationFactory implements EntityOperationFactoryInterface
      */
     public function deleteEntity(EntityInterface $entity) : OperationInterface
     {
-        return new DoctrineDeleteEntityOperation($entity, $this->entityManager);
+        return $this->decorate(new DoctrineDeleteEntityOperation($entity, $this->entityManager));
     }
 }

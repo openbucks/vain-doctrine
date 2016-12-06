@@ -53,6 +53,7 @@ services:
   doctrine.entity.manager.factory:
     class: Vain\Doctrine\Factory\DoctrineEntityManagerFactory
   entity.operation.factory.doctrine:
+    parent: entity.operation.factory.abstract
     class: Vain\Doctrine\Entity\Operation\Factory\DoctrineEntityOperationFactory
     arguments: ['@doctrine.entity.manager']
   operation.collection.factory.doctrine:
