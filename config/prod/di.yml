@@ -1,9 +1,2 @@
 imports:
   - { resource: '../di.yml' }
-
-services:
-  connection.factory.doctrine.proxy:
-    class: Vain\Connection\Factory\Decorator\Proxy\ConnectionFactoryProxyDecorator
-    decorates: connection.factory.doctrine
-    decoration_priority: 800
-    arguments: ['@connection.factory.pdo.proxy.inner']
