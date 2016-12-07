@@ -3,7 +3,6 @@ parameters:
   doctrine.database.name: 'doctrine'
   doctrine.entity.map.file: 'entitymap'
   doctrine.entity.map.extension: '.orm.yml'
-  doctrine.config.required.fields: []
 
 services:
   doctrine.entity.manager:

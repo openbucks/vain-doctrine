@@ -1,6 +1,9 @@
 imports:
   - { resource: '../di.yml' }
 
+parameters:
+  doctrine.config.required.fields: []
+
 services:
   connection.factory.doctrine.assert:
     class: Vain\Connection\Factory\Decorator\Assert\ConnectionFactoryAssertDecorator
