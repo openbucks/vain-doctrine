@@ -25,7 +25,7 @@ use Vain\Time\TimeInterface;
 class VainTime extends Type
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
@@ -33,7 +33,7 @@ class VainTime extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -51,7 +51,7 @@ class VainTime extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
@@ -68,10 +68,18 @@ class VainTime extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getName()
     {
         return 'vain_time';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
     }
 }
