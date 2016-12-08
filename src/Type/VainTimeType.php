@@ -18,11 +18,11 @@ use Doctrine\DBAL\Types\Type;
 use Vain\Time\TimeInterface;
 
 /**
- * Class VainTime
+ * Class VainTimeType
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class VainTime extends Type
+class VainTimeType extends Type
 {
     /**
      * @inheritDoc

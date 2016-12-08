@@ -16,11 +16,11 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\PostgresTypes\InetType;
 
 /**
- * Class VainInet
+ * Class VainInetType
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class VainInet extends InetType
+class VainInetType extends InetType
 {
     /**
      * @inheritDoc
