@@ -12,7 +12,7 @@
 namespace Vain\Doctrine\Connection;
 
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
-use Vain\Pdo\Connection\PdoConnectionInterface;
+use Vain\Connection\ConnectionInterface;
 
 /**
  * Class DoctrineMysqlConnection
@@ -21,16 +21,16 @@ use Vain\Pdo\Connection\PdoConnectionInterface;
  */
 class DoctrineMysqlConnection extends AbstractMySQLDriver
 {
-    private $pdoConnection;
+    private $connection;
 
     /**
      * PostgresqlDoctrineDriver constructor.
      *
-     * @param PdoConnectionInterface $pdoConnection
+     * @param ConnectionInterface $connection
      */
-    public function __construct(PdoConnectionInterface $pdoConnection)
+    public function __construct(ConnectionInterface $connection)
     {
-        $this->pdoConnection = $pdoConnection;
+        $this->connection = $connection;
     }
 
     /**
@@ -54,6 +54,6 @@ class DoctrineMysqlConnection extends AbstractMySQLDriver
      */
     public function establish()
     {
-        return $this->pdoConnection->establish();
+        return $this->connection->establish();
     }
 }
