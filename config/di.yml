@@ -29,7 +29,7 @@ services:
     arguments: ['@time.factory']
   connection.factory.doctrine:
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
-    arguments: ['doctrine.pdo', '@connection.factory.doctrine']
+    arguments: ['doctrine.pdo', '@connection.factory.pdo']
     tags:
       - {name: connection.factory}
   connection.factory.doctrine.proxy:
