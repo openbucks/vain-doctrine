@@ -44,7 +44,7 @@ class DoctrinePostgresqlConnection extends AbstractPostgreSQLDriver implements C
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName() : string
     {
         return 'pdo_pgsql';
     }

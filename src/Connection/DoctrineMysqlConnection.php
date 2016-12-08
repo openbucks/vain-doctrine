@@ -44,7 +44,7 @@ class DoctrineMysqlConnection extends AbstractMySQLDriver
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName() : string
     {
         return 'pdo_mysql';
     }
