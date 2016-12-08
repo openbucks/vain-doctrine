@@ -10,8 +10,3 @@ services:
     decorates: connection.factory.doctrine
     decoration_priority: 900
     arguments: ['@connection.factory.doctrine.assert.inner', '%doctrine.config.required.fields%']
-  connection.factory.doctrine.logger:
-    class: Vain\Connection\Factory\Decorator\Logger\ConnectionFactoryLoggerDecorator
-    decorates: connection.factory.doctrine
-    decoration_priority: 1000
-    arguments: ['@connection.factory.doctrine.logger.inner', '@logger.connection']
