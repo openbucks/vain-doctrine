@@ -29,14 +29,14 @@ services:
     arguments: ['@time.factory']
   connection.factory.doctrine:
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
-    arguments: ['doctrine.pdo', '@connection.factory.pdo']
+    arguments: ['doctrine.pdo', '@connection.factory.doctrine']
     tags:
       - {name: connection.factory}
   connection.factory.doctrine.proxy:
     class: Vain\Connection\Factory\Decorator\Proxy\ConnectionFactoryProxyDecorator
     decorates: connection.factory.doctrine
     decoration_priority: 800
-    arguments: ['@connection.factory.pdo.proxy.inner']
+    arguments: ['@connection.factory.doctrine.proxy.inner']
   doctrine.connection.pdo:
     class: PDOConnection
     factory: ['@connection.storage', getConnection]
