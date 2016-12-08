@@ -14,6 +14,7 @@ namespace Vain\Doctrine\Entity;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
@@ -73,7 +74,7 @@ class DoctrineEntityManager extends EntityManager
 
         switch (true) {
             case (is_array($conn)):
-                $conn = \Doctrine\DBAL\DriverManager::getConnection(
+                $conn = DriverManager::getConnection(
                     $conn,
                     $config,
                     ($eventManager ?: new EventManager())

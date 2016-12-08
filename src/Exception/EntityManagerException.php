@@ -32,8 +32,12 @@ class EntityManagerException extends AbstractCoreException
      * @param int                    $code
      * @param \Exception|null        $previous
      */
-    public function __construct(EntityManagerInterface $entityManager, string $message, int $code = 500, \Exception $previous = null)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        string $message,
+        int $code = 500,
+        \Exception $previous = null
+    ) {
         $this->entityManager = $entityManager;
         parent::__construct($message, $code, $previous);
     }

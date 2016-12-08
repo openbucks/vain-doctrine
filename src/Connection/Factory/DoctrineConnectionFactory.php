@@ -16,7 +16,6 @@ use Vain\Connection\Factory\AbstractConnectionFactory;
 use Vain\Connection\Factory\ConnectionFactoryInterface;
 use Vain\Doctrine\Connection\DoctrinePostgresqlConnection;
 use Vain\Doctrine\Exception\UnknownDoctrineTypeException;
-use Vain\Pdo\Connection\PdoConnectionInterface;
 
 /**
  * Class DoctrineConnectionFactory
@@ -44,9 +43,6 @@ class DoctrineConnectionFactory extends AbstractConnectionFactory
      */
     public function createConnection(array $config) : ConnectionInterface
     {
-        /**
-         * @var PdoConnectionInterface $connection
-         */
         $connection = $this->pdoConnectionFactory->createConnection($config);
         $type = $config['type'];
         switch ($type) {

@@ -45,7 +45,7 @@ class DoctrineCollectionDecorator extends AbstractCollectionDecorator
     {
         $this->entityManager->init();
 
-        $result = $this->getCollection()->execute();
+        $result = parent::execute();
         if (false === $result->getStatus()) {
             return $result;
         }

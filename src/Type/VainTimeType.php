@@ -43,8 +43,12 @@ class VainTimeType extends Type
 
         $val = $platform->getEventManager()->getTimeFactory()->createFromString($value);
 
-        if ( ! $val) {
-            throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getDateFormatString());
+        if (!$val) {
+            throw ConversionException::conversionFailedFormat(
+                $value,
+                $this->getName(),
+                $platform->getDateFormatString()
+            );
         }
 
         return $val;
@@ -61,7 +65,6 @@ class VainTimeType extends Type
 
         if ($value instanceof TimeInterface) {
             return $value->toDateTime();
-
         }
 
         throw new \InvalidArgumentException(sprintf('%s is not a properly formatted TIME type.', get_class($value)));
