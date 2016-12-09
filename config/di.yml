@@ -5,6 +5,11 @@ parameters:
   doctrine.entity.map.extension: '.orm.yml'
 
 services:
+  database.mvcc:
+    class: DatabaseInterface
+    factory: ['@database.storage', getDatabase]
+    arguments:
+      - 'mvcc'
   doctrine.entity.manager:
     class: Doctrine\ORM\EntityManager
     factory: ['@doctrine.entity.manager.factory', 'create']
