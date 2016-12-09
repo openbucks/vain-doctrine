@@ -24,7 +24,7 @@ services:
     arguments:
       - '@doctrine.cache'
       - '%app.env%'
-      - '%app.dir%/%app.config.dir%'
+      - '%app.dir%/%config.dir%'
       - '%doctrine.entity.map.file%'
       - '%doctrine.entity.map.extension%'
   doctrine.config.factory:
@@ -53,7 +53,7 @@ services:
     class: Vain\Doctrine\Cache\Apcu\DoctrineApcuCache
   doctrine.cache.redis:
     class: Vain\Doctrine\Cache\Redis\DoctrineRedisCache
-    arguments: ['@app.cache.redis']
+    arguments: ['@cache.redis']
   doctrine.entity.manager.factory:
     class: Vain\Doctrine\Factory\DoctrineEntityManagerFactory
   entity.operation.factory.doctrine:
