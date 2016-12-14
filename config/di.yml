@@ -3,6 +3,8 @@ parameters:
   doctrine.database.name: 'doctrine'
   doctrine.entity.map.file: 'entitymap'
   doctrine.entity.map.extension: '.orm.yml'
+  doctrine.dir: 'doctrine'
+  doctrine.proxy.name: 'Proxy'
 
 services:
   database.mvcc:
@@ -25,6 +27,8 @@ services:
       - '@doctrine.cache'
       - '%app.env%'
       - '%app.dir%/%config.dir%'
+      - '%app.dir%/%cache.dir%/%doctrine.dir%'
+      - '%doctrine.proxy.name%'
       - '%doctrine.entity.map.file%'
       - '%doctrine.entity.map.extension%'
   doctrine.config.factory:

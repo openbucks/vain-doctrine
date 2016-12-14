@@ -28,6 +28,8 @@ class DoctrineConfigurationFactory
      * @param DoctrineCacheInterface $doctrineCache
      * @param string                 $applicationEnv
      * @param string                 $configDir
+     * @param string                 $doctrineDir
+     * @param string                 $doctrineProxy
      * @param string                 $globalFileName
      * @param string                 $extension
      *
@@ -37,9 +39,12 @@ class DoctrineConfigurationFactory
         DoctrineCacheInterface $doctrineCache,
         string $applicationEnv,
         string $configDir,
+        string $doctrineDir,
+        string $doctrineProxy,
         string $globalFileName,
         string $extension
-    ) : DoctrineORMConfiguration {
+    ) : DoctrineORMConfiguration
+    {
         $driver = new SimplifiedYamlDriver([$configDir => ''], $extension);
         $driver->setGlobalBasename($globalFileName);
 
@@ -48,6 +53,8 @@ class DoctrineConfigurationFactory
             null,
             $doctrineCache
         );
+        $config->setProxyDir($doctrineDir);
+        $config->setProxyNamespace($doctrineProxy);
         $config->setMetadataDriverImpl($driver);
 
         return $config;
