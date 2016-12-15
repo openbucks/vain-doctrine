@@ -13,8 +13,8 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Operation\Collection\Decorator;
 
 use Vain\Doctrine\Entity\DoctrineEntityManager;
-use Vain\Operation\Collection\CollectionInterface;
-use Vain\Operation\Collection\Decorator\AbstractCollectionDecorator;
+use Vain\Core\Operation\Collection\OperationCollectionInterface;
+use Vain\Core\Operation\Collection\Decorator\AbstractOperationCollectionDecorator;
 use Vain\Core\Result\ResultInterface;
 
 /**
@@ -22,17 +22,17 @@ use Vain\Core\Result\ResultInterface;
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineCollectionDecorator extends AbstractCollectionDecorator
+class DoctrineCollectionDecorator extends AbstractOperationCollectionDecorator
 {
     private $entityManager;
 
     /**
      * DoctrineCollectionDecorator constructor.
      *
-     * @param CollectionInterface   $collection
+     * @param OperationCollectionInterface   $collection
      * @param DoctrineEntityManager $entityManager
      */
-    public function __construct(CollectionInterface $collection, DoctrineEntityManager $entityManager)
+    public function __construct(OperationCollectionInterface $collection, DoctrineEntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
         parent::__construct($collection);

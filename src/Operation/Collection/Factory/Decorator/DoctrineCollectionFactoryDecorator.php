@@ -14,26 +14,26 @@ namespace Vain\Doctrine\Operation\Collection\Factory\Decorator;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Doctrine\Operation\Collection\Decorator\DoctrineCollectionDecorator;
-use Vain\Operation\Collection\CollectionInterface;
-use Vain\Operation\Collection\Factory\CollectionFactoryInterface;
-use Vain\Operation\Collection\Factory\Decorator\AbstractCollectionFactoryDecorator;
+use Vain\Core\Operation\Collection\OperationCollectionInterface;
+use Vain\Core\Operation\Collection\Factory\OperationCollectionFactoryInterface;
+use Vain\Core\Operation\Collection\Factory\Decorator\AbstractOperationCollectionFactoryDecorator;
 
 /**
  * Class DoctrineCollectionFactoryDecorator
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineCollectionFactoryDecorator extends AbstractCollectionFactoryDecorator
+class DoctrineCollectionFactoryDecorator extends AbstractOperationCollectionFactoryDecorator
 {
     private $entityManager;
 
     /**
      * DoctrineCollectionFactoryDecorator constructor.
      *
-     * @param CollectionFactoryInterface $collectionFactory
+     * @param OperationCollectionFactoryInterface $collectionFactory
      * @param EntityManagerInterface     $entityManager
      */
-    public function __construct(CollectionFactoryInterface $collectionFactory, EntityManagerInterface $entityManager)
+    public function __construct(OperationCollectionFactoryInterface $collectionFactory, EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
         parent::__construct($collectionFactory);
@@ -42,7 +42,7 @@ class DoctrineCollectionFactoryDecorator extends AbstractCollectionFactoryDecora
     /**
      * @inheritDoc
      */
-    public function create(array $operations = []) : CollectionInterface
+    public function create(array $operations = []) : OperationCollectionInterface
     {
         $collection = parent::create($operations);
 
