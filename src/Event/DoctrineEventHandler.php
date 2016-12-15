@@ -13,9 +13,9 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Event;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Vain\Event\EventInterface;
-use Vain\Event\Handler\AbstractEventHandler;
-use Vain\Event\Resolver\ResolverInterface;
+use Vain\Core\Event\EventInterface;
+use Vain\Core\Event\Handler\AbstractEventHandler;
+use Vain\Core\Event\Resolver\EventResolverInterface;
 
 /**
  * Class DoctrineEventHandler
