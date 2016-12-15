@@ -19,7 +19,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Vain\Doctrine\Exception\LevelIntegrityDoctrineException;
-use Vain\Time\Factory\TimeFactoryInterface;
+use Vain\Core\Time\Factory\TimeFactoryInterface;
 
 /**
  * Class DoctrineEntityManager

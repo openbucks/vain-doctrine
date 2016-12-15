@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Event\Manager;
 
 use Doctrine\Common\EventManager;
-use Vain\Time\Factory\TimeFactoryInterface;
+use Vain\Core\Time\Factory\TimeFactoryInterface;
 
 /**
  * Class DoctrineEventManager

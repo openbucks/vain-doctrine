@@ -16,7 +16,7 @@ use Doctrine\Common\EventManager as DoctrineEventManager;
 use Doctrine\DBAL\Driver\Connection as DBALDriverConnection;
 use Doctrine\ORM\Configuration as DoctrineORMConfiguration;
 use Vain\Doctrine\Entity\DoctrineEntityManager;
-use Vain\Time\Factory\TimeFactoryInterface;
+use Vain\Core\Time\Factory\TimeFactoryInterface;
 
 /**
  * Class DoctrineEntityManagerFactory
