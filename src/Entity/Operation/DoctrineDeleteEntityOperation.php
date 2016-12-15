@@ -13,10 +13,10 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Vain\Entity\EntityInterface;
+use Vain\Core\Entity\EntityInterface;
 use Vain\Entity\Operation\AbstractDeleteEntityOperation;
-use Vain\Operation\Result\OperationResultInterface;
-use Vain\Operation\Result\Successful\SuccessfulOperationResult;
+use Vain\Core\Result\ResultInterface;
+use Vain\Core\Result\SuccessfulResult;
 
 /**
  * Class DoctrineDeleteEntityOperation
@@ -42,10 +42,10 @@ class DoctrineDeleteEntityOperation extends AbstractDeleteEntityOperation
     /**
      * @inheritDoc
      */
-    public function execute() : OperationResultInterface
+    public function execute() : ResultInterface
     {
         $this->entityManager->remove($this->getEntity());
 
-        return new SuccessfulOperationResult();
+        return new SuccessfulResult();
     }
 }

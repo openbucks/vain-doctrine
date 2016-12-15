@@ -16,11 +16,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Vain\Doctrine\Entity\Operation\DoctrineCreateEntityOperation;
 use Vain\Doctrine\Entity\Operation\DoctrineDeleteEntityOperation;
 use Vain\Doctrine\Entity\Operation\DoctrineUpdateEntityOperation;
-use Vain\Entity\EntityInterface;
+use Vain\Core\Entity\EntityInterface;
 use Vain\Entity\Operation\Factory\AbstractEntityOperationFactory;
 use Vain\Entity\Operation\Factory\EntityOperationFactoryInterface;
-use Vain\Operation\Factory\OperationFactoryInterface;
-use Vain\Operation\OperationInterface;
+use Vain\Core\Operation\Factory\OperationFactoryInterface;
+use Vain\Core\Operation\OperationInterface;
 
 /**
  * Class DoctrineEntityOperationFactory

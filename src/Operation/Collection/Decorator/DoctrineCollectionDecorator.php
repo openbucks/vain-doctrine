@@ -15,7 +15,7 @@ namespace Vain\Doctrine\Operation\Collection\Decorator;
 use Vain\Doctrine\Entity\DoctrineEntityManager;
 use Vain\Operation\Collection\CollectionInterface;
 use Vain\Operation\Collection\Decorator\AbstractCollectionDecorator;
-use Vain\Operation\Result\OperationResultInterface;
+use Vain\Core\Result\ResultInterface;
 
 /**
  * Class DoctrineCollectionDecorator
@@ -41,7 +41,7 @@ class DoctrineCollectionDecorator extends AbstractCollectionDecorator
     /**
      * @inheritDoc
      */
-    public function execute() : OperationResultInterface
+    public function execute() : ResultInterface
     {
         $this->entityManager->init();
 

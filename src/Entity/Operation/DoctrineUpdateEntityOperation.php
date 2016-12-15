@@ -13,10 +13,10 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Vain\Entity\EntityInterface;
+use Vain\Core\Entity\EntityInterface;
 use Vain\Entity\Operation\AbstractUpdateEntityOperation;
-use Vain\Operation\Result\OperationResultInterface;
-use Vain\Operation\Result\Successful\SuccessfulOperationResult;
+use Vain\Core\Result\ResultInterface;
+use Vain\Core\Result\SuccessfulResult;
 
 /**
  * Class DoctrineUpdateEntityOperation
@@ -46,8 +46,8 @@ class DoctrineUpdateEntityOperation extends AbstractUpdateEntityOperation
     /**
      * @inheritDoc
      */
-    public function execute() : OperationResultInterface
+    public function execute() : ResultInterface
     {
-        return new SuccessfulOperationResult();
+        return new SuccessfulResult();
     }
 }
