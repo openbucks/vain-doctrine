@@ -15,7 +15,7 @@ namespace Vain\Doctrine\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
-use Vain\Time\TimeInterface;
+use Vain\Core\Time\TimeInterface;
 
 /**
  * Class VainTimeType
