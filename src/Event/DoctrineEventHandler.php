@@ -30,10 +30,10 @@ class DoctrineEventHandler extends AbstractEventHandler
     /**
      * DoctrineEventHandler constructor.
      *
-     * @param ResolverInterface      $resolver
+     * @param EventResolverInterface      $resolver
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(ResolverInterface $resolver, EntityManagerInterface $entityManager)
+    public function __construct(EventResolverInterface $resolver, EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
         parent::__construct($resolver);
