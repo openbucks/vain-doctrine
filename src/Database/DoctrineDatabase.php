@@ -30,23 +30,23 @@ class DoctrineDatabase extends Connection implements MvccDatabaseInterface
     private $generatorFactory;
 
     /**
-     * DoctrineConnection constructor.
+     * DoctrineDatabase constructor.
      *
-     * @param array                     $params
-     * @param Driver                    $driver
-     * @param Configuration             $config
-     * @param EventManager              $eventManager
+     * @param array                             $params
+     * @param Configuration                     $config
+     * @param Driver                            $driver
+     * @param EventManager                      $eventManager
      * @param DatabaseGeneratorFactoryInterface $generatorFactory
      */
     public function __construct(
         array $params,
-        Driver $driver,
         Configuration $config,
+        Driver $driver,
         EventManager $eventManager,
         DatabaseGeneratorFactoryInterface $generatorFactory
     ) {
         $this->generatorFactory = $generatorFactory;
-        parent::__construct($params, $driver, $config, $eventManager);
+        parent::__construct($params['databases']['mvcc'], $driver, $config, $eventManager);
     }
 
     /**
@@ -84,11 +84,6 @@ class DoctrineDatabase extends Connection implements MvccDatabaseInterface
      */
     public function runQuery($query, array $bindParams, array $bindTypeParams = []) : DatabaseGeneratorInterface
     {
-        /**
-         * @var Driver\PDOStatement $doctrineStatement
-         */
-        $doctrineStatement = $this->query($query, $bindParams);
-
-        return $this->generatorFactory->create($this, new DoctrineCursor($doctrineStatement));
+        return $this->generatorFactory->create(new DoctrineCursor($this->query($query, $bindParams)));
     }
 }

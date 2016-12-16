@@ -13,7 +13,7 @@ namespace Vain\Doctrine\Connection\Factory;
 
 use Vain\Core\Connection\ConnectionInterface;
 use Vain\Core\Connection\Factory\AbstractConnectionFactory;
-use Vain\Core\Connection\Factory\ConnectionFactoryInterface;
+use Vain\Core\Connection\Storage\ConnectionStorageInterface;
 use Vain\Doctrine\Connection\DoctrinePostgresqlConnection;
 use Vain\Doctrine\Exception\UnknownDoctrineTypeException;
 
@@ -24,33 +24,41 @@ use Vain\Doctrine\Exception\UnknownDoctrineTypeException;
  */
 class DoctrineConnectionFactory extends AbstractConnectionFactory
 {
-    private $pdoConnectionFactory;
+    private $connectionStorage;
 
     /**
      * DoctrineConnectionFactory constructor.
      *
-     * @param string                     $name
-     * @param ConnectionFactoryInterface $connectionFactory
+     * @param \ArrayAccess               $configData
+     * @param ConnectionStorageInterface $connectionStorage
      */
-    public function __construct($name, ConnectionFactoryInterface $connectionFactory)
+    public function __construct(\ArrayAccess $configData, ConnectionStorageInterface $connectionStorage)
     {
-        $this->pdoConnectionFactory = $connectionFactory;
-        parent::__construct($name);
+        $this->connectionStorage = $connectionStorage;
+        parent::__construct($configData);
     }
 
     /**
      * @inheritDoc
      */
-    public function createConnection(array $config) : ConnectionInterface
+    public function getName() : string
     {
-        $connection = $this->pdoConnectionFactory->createConnection($config);
+        return 'doctrine';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createConnection(string $connectionName) : ConnectionInterface
+    {
+        $config = $this->getConfigData($connectionName);
         $type = $config['type'];
         switch ($type) {
             case 'pgsql':
-                return new DoctrinePostgresqlConnection($connection);
+                return new DoctrinePostgresqlConnection($this->connectionStorage->getConnection($connectionName));
                 break;
             case 'mysql':
-                return new DoctrinePostgresqlConnection($connection);
+                return new DoctrinePostgresqlConnection($this->connectionStorage->getConnection($connectionName));
                 break;
             default:
                 throw new UnknownDoctrineTypeException($this, $type);

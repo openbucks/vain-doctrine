@@ -7,11 +7,6 @@ parameters:
   doctrine.proxy.name: 'Proxy'
 
 services:
-  database.mvcc:
-    class: DatabaseInterface
-    factory: ['@database.storage', getDatabase]
-    arguments:
-      - 'mvcc'
   doctrine.entity.manager:
     class: Doctrine\ORM\EntityManager
     factory: ['@doctrine.entity.manager.factory', 'create']
@@ -37,20 +32,19 @@ services:
     class: Vain\Doctrine\Event\Manager\DoctrineEventManager
     arguments: ['@time.factory']
   connection.factory.doctrine:
+    parent: connection.factory.abstract
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
-    arguments: ['doctrine.pdo', '@connection.factory.pdo']
+    arguments: ['@connection.storage']
     tags:
       - {name: connection.factory}
-  doctrine.connection.pdo:
+  doctrine.connection:
     class: PDOConnection
     factory: ['@connection.storage', getConnection]
-    arguments:
-      - '%doctrine.connection.name%'
-  database.factory.doctrine:
-    class: Vain\Doctrine\Database\Factory\DoctrineDatabaseFactory
-    arguments: ['@doctrine.config', '@doctrine.event.manager', '@database.generator.factory', '%doctrine.database.name%']
-    tags:
-      - {name: database.factory}
+      arguments:
+        - '%doctrine.connection.name%'
+  database.doctrine:
+    class: Vain\Doctrine\Database\DoctrineDatabase
+    arguments: ['@config', '@doctrine.config', '@doctrine.connection', '@doctrine.event.manager', '@database.generator.factory']
   doctrine.cache.memory:
     class: Doctrine\Common\Cache\ArrayCache
   doctrine.cache.apcu:
