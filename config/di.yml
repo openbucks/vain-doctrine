@@ -35,8 +35,6 @@ services:
     parent: connection.factory.abstract
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
     arguments: ['@connection.storage']
-    tags:
-      - {name: connection.factory}
   doctrine.connection:
     class: PDOConnection
     factory: ['@connection.storage', getConnection]
