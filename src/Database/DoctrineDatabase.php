@@ -15,7 +15,7 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
-use Vain\Database\Mvcc\MvccDatabaseInterface;
+use Vain\Core\Database\Mvcc\MvccDatabaseInterface;
 use Vain\Doctrine\Cursor\DoctrineCursor;
 use Vain\Core\Database\Generator\Factory\DatabaseGeneratorFactoryInterface;
 use Vain\Core\Database\Generator\DatabaseGeneratorInterface;

@@ -12,7 +12,7 @@ declare(strict_types = 1);
 
 namespace Vain\Doctrine\Exception;
 
-use Vain\Core\Connection\Exception\ConnectionFactoryException;
+use Vain\Core\Exception\ConnectionFactoryException;
 use Vain\Core\Connection\Factory\ConnectionFactoryInterface;
 
 /**

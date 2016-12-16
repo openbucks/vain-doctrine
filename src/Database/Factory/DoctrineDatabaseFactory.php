@@ -17,7 +17,7 @@ use Doctrine\DBAL\Driver as DoctrineDatabaseDriver;
 use Vain\Core\Connection\ConnectionInterface;
 use Vain\Doctrine\Database\DoctrineDatabase;
 use Vain\Core\Database\DatabaseInterface;
-use Vain\Database\Factory\AbstractDatabaseFactory;
+use Vain\Core\Database\Factory\AbstractDatabaseFactory;
 use Vain\Core\Database\Generator\Factory\DatabaseGeneratorFactoryInterface;
 
 /**
