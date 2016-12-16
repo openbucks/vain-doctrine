@@ -1,13 +1,2 @@
 imports:
   - { resource: '../di.yml' }
-
-parameters:
-  doctrine.config.required.fields: []
-
-services:
-  connection.factory.doctrine.assert:
-    class: Vain\Core\Connection\Factory\Decorator\Assert\ConnectionFactoryAssertDecorator
-    decorates: connection.factory.doctrine
-    decoration_priority: 900
-    arguments: ['@connection.factory.doctrine.assert.inner', '%doctrine.config.required.fields%']
-  doctrine.cache: '@doctrine.cache.memory'
