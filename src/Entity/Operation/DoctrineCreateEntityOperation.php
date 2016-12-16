@@ -14,7 +14,7 @@ namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Core\Entity\EntityInterface;
-use Vain\Entity\Operation\AbstractCreateEntityOperation;
+use Vain\Core\Entity\Operation\AbstractCreateEntityOperation;
 use Vain\Core\Result\ResultInterface;
 use Vain\Core\Result\SuccessfulResult;
 

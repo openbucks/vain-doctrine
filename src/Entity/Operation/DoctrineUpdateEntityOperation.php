@@ -14,7 +14,7 @@ namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Core\Entity\EntityInterface;
-use Vain\Entity\Operation\AbstractUpdateEntityOperation;
+use Vain\Core\Entity\Operation\AbstractUpdateEntityOperation;
 use Vain\Core\Result\ResultInterface;
 use Vain\Core\Result\SuccessfulResult;
 
