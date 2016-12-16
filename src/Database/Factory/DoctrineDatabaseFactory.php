@@ -14,11 +14,11 @@ namespace Vain\Doctrine\Database\Factory;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Driver as DoctrineDatabaseDriver;
-use Vain\Connection\ConnectionInterface;
+use Vain\Core\Connection\ConnectionInterface;
 use Vain\Doctrine\Database\DoctrineDatabase;
-use Vain\Database\DatabaseInterface;
+use Vain\Core\Database\DatabaseInterface;
 use Vain\Database\Factory\AbstractDatabaseFactory;
-use Vain\Database\Generator\Factory\GeneratorFactoryInterface;
+use Vain\Core\Database\Generator\Factory\DatabaseGeneratorFactoryInterface;
 
 /**
  * Class DoctrineDatabaseFactory
@@ -38,13 +38,13 @@ class DoctrineDatabaseFactory extends AbstractDatabaseFactory
      *
      * @param Configuration             $config
      * @param EventManager              $eventManager
-     * @param GeneratorFactoryInterface $generatorFactory
+     * @param DatabaseGeneratorFactoryInterface $generatorFactory
      * @param string                    $name
      */
     public function __construct(
         Configuration $config,
         EventManager $eventManager,
-        GeneratorFactoryInterface $generatorFactory,
+        DatabaseGeneratorFactoryInterface $generatorFactory,
         string $name
     ) {
         $this->config = $config;

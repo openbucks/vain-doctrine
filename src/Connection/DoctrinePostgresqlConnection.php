@@ -12,7 +12,7 @@
 namespace Vain\Doctrine\Connection;
 
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
-use Vain\Connection\ConnectionInterface;
+use Vain\Core\Connection\ConnectionInterface;
 
 /**
  * Class DoctrinePostgresqlConnection

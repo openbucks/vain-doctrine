@@ -11,7 +11,7 @@
 
 namespace Vain\Doctrine\Connection\Factory;
 
-use Vain\Connection\ConnectionInterface;
+use Vain\Core\Connection\ConnectionInterface;
 use Vain\Connection\Factory\AbstractConnectionFactory;
 use Vain\Connection\Factory\ConnectionFactoryInterface;
 use Vain\Doctrine\Connection\DoctrinePostgresqlConnection;

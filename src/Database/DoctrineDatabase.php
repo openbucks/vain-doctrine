@@ -17,8 +17,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Vain\Database\Mvcc\MvccDatabaseInterface;
 use Vain\Doctrine\Cursor\DoctrineCursor;
-use Vain\Database\Generator\Factory\GeneratorFactoryInterface;
-use Vain\Database\Generator\GeneratorInterface;
+use Vain\Core\Database\Generator\Factory\DatabaseGeneratorFactoryInterface;
+use Vain\Core\Database\Generator\DatabaseGeneratorInterface;
 
 /**
  * Class DoctrineDatabase
@@ -36,14 +36,14 @@ class DoctrineDatabase extends Connection implements MvccDatabaseInterface
      * @param Driver                    $driver
      * @param Configuration             $config
      * @param EventManager              $eventManager
-     * @param GeneratorFactoryInterface $generatorFactory
+     * @param DatabaseGeneratorFactoryInterface $generatorFactory
      */
     public function __construct(
         array $params,
         Driver $driver,
         Configuration $config,
         EventManager $eventManager,
-        GeneratorFactoryInterface $generatorFactory
+        DatabaseGeneratorFactoryInterface $generatorFactory
     ) {
         $this->generatorFactory = $generatorFactory;
         parent::__construct($params, $driver, $config, $eventManager);
@@ -82,7 +82,7 @@ class DoctrineDatabase extends Connection implements MvccDatabaseInterface
     /**
      * @inheritDoc
      */
-    public function runQuery($query, array $bindParams, array $bindTypeParams = []) : GeneratorInterface
+    public function runQuery($query, array $bindParams, array $bindTypeParams = []) : DatabaseGeneratorInterface
     {
         /**
          * @var Driver\PDOStatement $doctrineStatement

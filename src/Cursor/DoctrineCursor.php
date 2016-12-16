@@ -12,14 +12,14 @@
 namespace Vain\Doctrine\Cursor;
 
 use Doctrine\DBAL\Driver\PDOStatement as DoctrineDriverStatementInterface;
-use Vain\Database\Cursor\CursorInterface;
+use Vain\Core\Database\Cursor\DatabaseCursorInterface;
 
 /**
  * Class DoctrineCursor
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineCursor implements CursorInterface
+class DoctrineCursor implements DatabaseCursorInterface
 {
     private $doctrineStatement;
 
@@ -66,7 +66,7 @@ class DoctrineCursor implements CursorInterface
     /**
      * @inheritDoc
      */
-    public function close() : CursorInterface
+    public function close() : DatabaseCursorInterface
     {
         $this->doctrineStatement->closeCursor();
 
@@ -76,7 +76,7 @@ class DoctrineCursor implements CursorInterface
     /**
      * @inheritDoc
      */
-    public function mode(int $mode) : CursorInterface
+    public function mode(int $mode) : DatabaseCursorInterface
     {
         $this->mode = $mode;
 
