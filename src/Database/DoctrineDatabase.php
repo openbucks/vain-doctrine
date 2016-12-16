@@ -32,14 +32,14 @@ class DoctrineDatabase extends Connection implements MvccDatabaseInterface
     /**
      * DoctrineDatabase constructor.
      *
-     * @param array                             $params
+     * @param \ArrayAccess                      $params
      * @param Configuration                     $config
      * @param Driver                            $driver
      * @param EventManager                      $eventManager
      * @param DatabaseGeneratorFactoryInterface $generatorFactory
      */
     public function __construct(
-        array $params,
+        \ArrayAccess $params,
         Configuration $config,
         Driver $driver,
         EventManager $eventManager,
