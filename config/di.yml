@@ -40,8 +40,8 @@ services:
   doctrine.connection:
     class: PDOConnection
     factory: ['@connection.storage', getConnection]
-      arguments:
-        - '%doctrine.connection.name%'
+    arguments:
+      - '%doctrine.connection.name%'
   database.doctrine:
     class: Vain\Doctrine\Database\DoctrineDatabase
     arguments: ['@config', '@doctrine.config', '@doctrine.connection', '@doctrine.event.manager', '@database.generator.factory']
