@@ -12,8 +12,8 @@ declare(strict_types = 1);
 
 namespace Vain\Doctrine\Exception;
 
-use Vain\Connection\Exception\ConnectionFactoryException;
-use Vain\Connection\Factory\ConnectionFactoryInterface;
+use Vain\Core\Connection\Exception\ConnectionFactoryException;
+use Vain\Core\Connection\Factory\ConnectionFactoryInterface;
 
 /**
  * Class UnknownDoctrineDriverException
