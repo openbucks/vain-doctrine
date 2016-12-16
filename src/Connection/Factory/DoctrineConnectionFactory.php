@@ -12,8 +12,6 @@
 namespace Vain\Doctrine\Connection\Factory;
 
 use Vain\Core\Connection\ConnectionInterface;
-use Vain\Core\Connection\Factory\AbstractConnectionFactory;
-use Vain\Core\Connection\Storage\ConnectionStorageInterface;
 use Vain\Doctrine\Connection\DoctrinePostgresqlConnection;
 use Vain\Doctrine\Exception\UnknownDoctrineTypeException;
 
@@ -22,20 +20,18 @@ use Vain\Doctrine\Exception\UnknownDoctrineTypeException;
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class DoctrineConnectionFactory extends AbstractConnectionFactory
+class DoctrineConnectionFactory
 {
-    private $connectionStorage;
+    private $connection;
 
     /**
      * DoctrineConnectionFactory constructor.
      *
-     * @param \ArrayAccess               $configData
-     * @param ConnectionStorageInterface $connectionStorage
+     * @param ConnectionInterface $connection
      */
-    public function __construct(\ArrayAccess $configData, ConnectionStorageInterface $connectionStorage)
+    public function __construct(ConnectionInterface $connection)
     {
-        $this->connectionStorage = $connectionStorage;
-        parent::__construct($configData);
+        $this->connection = $connection;
     }
 
     /**
@@ -51,14 +47,13 @@ class DoctrineConnectionFactory extends AbstractConnectionFactory
      */
     public function createConnection(string $connectionName) : ConnectionInterface
     {
-        $config = $this->getConfigData($connectionName);
-        $type = $config['type'];
+        $type = 'pgsql';
         switch ($type) {
             case 'pgsql':
-                return new DoctrinePostgresqlConnection($this->connectionStorage->getConnection($connectionName));
+                return new DoctrinePostgresqlConnection($this->connection);
                 break;
             case 'mysql':
-                return new DoctrinePostgresqlConnection($this->connectionStorage->getConnection($connectionName));
+                return new DoctrinePostgresqlConnection($this->connection);
                 break;
             default:
                 throw new UnknownDoctrineTypeException($this, $type);

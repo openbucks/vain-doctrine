@@ -32,12 +32,11 @@ services:
     class: Vain\Doctrine\Event\Manager\DoctrineEventManager
     arguments: ['@time.factory']
   connection.factory.doctrine:
-    parent: connection.factory.abstract
     class: Vain\Doctrine\Connection\Factory\DoctrineConnectionFactory
-    arguments: ['@connection.storage']
+    arguments: ['@connection.pdo']
   doctrine.connection:
     class: PDOConnection
-    factory: ['@connection.storage', getConnection]
+    factory: ['@connection.factory.doctrine', 'createConnection']
     arguments:
       - '%doctrine.connection.name%'
   database.doctrine:
