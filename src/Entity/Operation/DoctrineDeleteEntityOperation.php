@@ -15,8 +15,8 @@ namespace Vain\Doctrine\Entity\Operation;
 use Doctrine\ORM\EntityManagerInterface;
 use Vain\Core\Entity\EntityInterface;
 use Vain\Core\Entity\Operation\AbstractDeleteEntityOperation;
-use Vain\Core\Result\ResultInterface;
-use Vain\Core\Result\SuccessfulResult;
+use Vain\Core\Event\Dispatcher\EventDispatcherInterface;
+use Vain\Core\Event\Resolver\EventResolverInterface;
 
 /**
  * Class DoctrineDeleteEntityOperation
@@ -27,25 +27,42 @@ class DoctrineDeleteEntityOperation extends AbstractDeleteEntityOperation
 {
     private $entityManager;
 
+    private $entityName;
+
+    private $criteria;
+
     /**
      * DoctrineDeleteEntityOperation constructor.
      *
-     * @param EntityInterface        $entity
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface   $entityManager
+     * @param string                   $entityName
+     * @param array                    $criteria
+     * @param EventResolverInterface   $eventResolver
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(EntityInterface $entity, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        string $entityName,
+        array $criteria,
+        EventResolverInterface $eventResolver,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->entityManager = $entityManager;
-        parent::__construct($entity);
+        $this->entityName = $entityName;
+        $this->criteria = $criteria;
+        parent::__construct($eventResolver, $eventDispatcher);
     }
 
     /**
      * @inheritDoc
      */
-    public function execute() : ResultInterface
+    public function deleteEntity() : EntityInterface
     {
-        $this->entityManager->remove($this->getEntity());
+        if (null === ($entity = $this->entityManager->getRepository($this->entityName)->findOneBy($this->criteria))) {
+            return null;
+        }
+        $this->entityManager->remove($entity);
 
-        return new SuccessfulResult();
+        return $entity;
     }
 }

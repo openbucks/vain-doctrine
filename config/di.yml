@@ -54,7 +54,7 @@ services:
   entity.operation.factory.doctrine:
     parent: entity.operation.factory.abstract
     class: Vain\Doctrine\Entity\Operation\Factory\DoctrineEntityOperationFactory
-    arguments: ['@doctrine.entity.manager']
+    arguments: ['@doctrine.entity.manager', '@entity.resolver', '@collection.event.dispatcher']
   operation.collection.factory.doctrine:
     class: Vain\Doctrine\Operation\Collection\Factory\Decorator\DoctrineCollectionFactoryDecorator
     decorates: operation.collection.factory

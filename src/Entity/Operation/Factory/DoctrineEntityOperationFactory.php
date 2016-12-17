@@ -13,10 +13,11 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Entity\Operation\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Vain\Core\Event\Dispatcher\EventDispatcherInterface;
+use Vain\Core\Event\Resolver\EventResolverInterface;
 use Vain\Doctrine\Entity\Operation\DoctrineCreateEntityOperation;
 use Vain\Doctrine\Entity\Operation\DoctrineDeleteEntityOperation;
 use Vain\Doctrine\Entity\Operation\DoctrineUpdateEntityOperation;
-use Vain\Core\Entity\EntityInterface;
 use Vain\Core\Entity\Operation\Factory\AbstractEntityOperationFactory;
 use Vain\Core\Entity\Operation\Factory\EntityOperationFactoryInterface;
 use Vain\Core\Operation\Factory\OperationFactoryInterface;
@@ -32,39 +33,77 @@ class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory impl
 
     private $entityManager;
 
+    private $eventResolver;
+
+    private $eventDispatcher;
+
     /**
      * DoctrineEntityOperationFactory constructor.
      *
      * @param OperationFactoryInterface $operationFactory
      * @param EntityManagerInterface    $entityManager
+     * @param EventResolverInterface    $eventResolver
+     * @param EventDispatcherInterface  $eventDispatcher
      */
-    public function __construct(OperationFactoryInterface $operationFactory, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        OperationFactoryInterface $operationFactory,
+        EntityManagerInterface $entityManager,
+        EventResolverInterface $eventResolver,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->entityManager = $entityManager;
+        $this->eventResolver = $eventResolver;
+        $this->eventDispatcher = $eventDispatcher;
         parent::__construct($operationFactory);
     }
 
     /**
      * @inheritDoc
      */
-    public function createEntity(EntityInterface $entity) : OperationInterface
+    public function createOperation(string $entityName, array $entityData) : OperationInterface
     {
-        return $this->decorate(new DoctrineCreateEntityOperation($entity, $this->entityManager));
+        return new DoctrineCreateEntityOperation(
+            $this->entityManager,
+            $this->entityManager->getClassMetadata($entityName),
+            $entityData,
+            $this->eventResolver,
+            $this->eventDispatcher
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function doUpdateEntity(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
+    public function updateOperation(
+        string $entityName,
+        array $criteria,
+        array $entityData,
+        bool $lock = false
+    ) : OperationInterface
     {
-        return $this->decorate(new DoctrineUpdateEntityOperation($newEntity, $oldEntity, $this->entityManager));
+        return new DoctrineUpdateEntityOperation(
+            $this->entityManager,
+            $this->entityManager->getClassMetadata($entityName),
+            $entityName,
+            $criteria,
+            $entityData,
+            $lock,
+            $this->eventResolver,
+            $this->eventDispatcher
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function deleteEntity(EntityInterface $entity) : OperationInterface
+    public function deleteOperation(string $entityName, array $criteria) : OperationInterface
     {
-        return $this->decorate(new DoctrineDeleteEntityOperation($entity, $this->entityManager));
+        return new DoctrineDeleteEntityOperation(
+            $this->entityManager,
+            $entityName,
+            $criteria,
+            $this->eventResolver,
+            $this->eventDispatcher
+        );
     }
 }
