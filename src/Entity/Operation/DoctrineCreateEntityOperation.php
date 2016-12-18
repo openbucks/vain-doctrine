@@ -44,6 +44,7 @@ class DoctrineCreateEntityOperation extends AbstractCreateEntityOperation
         EventResolverInterface $eventResolver,
         EventDispatcherInterface $eventDispatcher
     ) {
+        $this->entity = $entity;
         $this->entityManager = $entityManager;
         parent::__construct($eventResolver, $eventDispatcher);
     }

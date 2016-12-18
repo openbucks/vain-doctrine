@@ -47,9 +47,9 @@ class DoctrineUpdateEntityOperation extends AbstractUpdateEntityOperation
         EventResolverInterface $eventResolver,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->entityManager = $entityManager;
         $this->newEntity = $newEntity;
         $this->oldEntity = $oldEntity;
+        $this->entityManager = $entityManager;
         parent::__construct($eventResolver, $eventDispatcher);
     }
 
