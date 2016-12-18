@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Entity\Operation;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+
 use Vain\Core\Entity\EntityInterface;
 use Vain\Core\Entity\Operation\AbstractCreateEntityOperation;
 use Vain\Core\Event\Dispatcher\EventDispatcherInterface;
@@ -26,31 +26,25 @@ use Vain\Core\Event\Resolver\EventResolverInterface;
  */
 class DoctrineCreateEntityOperation extends AbstractCreateEntityOperation
 {
+    private $entity;
+
     private $entityManager;
-
-    private $classMetadata;
-
-    private $entityData;
 
     /**
      * DoctrineCreateEntityOperation constructor.
      *
+     * @param EntityInterface          $entity
      * @param EntityManagerInterface   $entityManager
-     * @param ClassMetadataInfo        $classMetadata
-     * @param array                    $entityData
      * @param EventResolverInterface   $eventResolver
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
+        EntityInterface $entity,
         EntityManagerInterface $entityManager,
-        ClassMetadataInfo $classMetadata,
-        array $entityData,
         EventResolverInterface $eventResolver,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->entityManager = $entityManager;
-        $this->classMetadata = $classMetadata;
-        $this->entityData = $entityData;
         parent::__construct($eventResolver, $eventDispatcher);
     }
 
@@ -59,32 +53,8 @@ class DoctrineCreateEntityOperation extends AbstractCreateEntityOperation
      */
     public function createEntity() : EntityInterface
     {
-        /**
-         * @var EntityInterface $entity
-         */
-        $entity = $this->classMetadata->getReflectionClass()->newInstance();
-        $parsedData = [];
-        foreach ($this->entityData as $column => $value) {
-            if (array_key_exists($column, $this->classMetadata->fieldNames)) {
-                $parsedData[$this->classMetadata->fieldNames[$column]] = $value;
-                continue;
-            }
-            foreach ($this->classMetadata->associationMappings as $associationMapping) {
-                if (false === $associationMapping['type'] <= 2) {
-                    continue;
-                }
-                if ($column !== $associationMapping['joinColumn']['name']) {
-                    continue;
-                }
-                if (null === ($entity = $this->entityManager->find($associationMapping['targetEntity'], $value))) {
-                    return null;
-                }
-                $parsedData[$associationMapping['fieldName']] = $entity;
-            }
-        }
+        $this->entityManager->persist($this->entity);
 
-        $this->entityManager->persist($entity->fromArray($parsedData));
-
-        return $entity;
+        return $this->entity;
     }
 }

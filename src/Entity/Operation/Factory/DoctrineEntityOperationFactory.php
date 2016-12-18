@@ -13,6 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Entity\Operation\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Vain\Core\Entity\EntityInterface;
 use Vain\Core\Event\Dispatcher\EventDispatcherInterface;
 use Vain\Core\Event\Resolver\EventResolverInterface;
 use Vain\Doctrine\Entity\Operation\DoctrineCreateEntityOperation;
@@ -60,12 +61,11 @@ class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory impl
     /**
      * @inheritDoc
      */
-    public function createOperation(string $entityName, array $entityData) : OperationInterface
+    public function createOperation(EntityInterface $entity) : OperationInterface
     {
         return new DoctrineCreateEntityOperation(
+            $entity,
             $this->entityManager,
-            $this->entityManager->getClassMetadata($entityName),
-            $entityData,
             $this->eventResolver,
             $this->eventDispatcher
         );
@@ -74,20 +74,12 @@ class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory impl
     /**
      * @inheritDoc
      */
-    public function updateOperation(
-        string $entityName,
-        array $criteria,
-        array $entityData,
-        bool $lock = false
-    ) : OperationInterface
+    public function updateOperation(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
     {
         return new DoctrineUpdateEntityOperation(
+            $newEntity,
+            $oldEntity,
             $this->entityManager,
-            $this->entityManager->getClassMetadata($entityName),
-            $entityName,
-            $criteria,
-            $entityData,
-            $lock,
             $this->eventResolver,
             $this->eventDispatcher
         );
@@ -96,12 +88,11 @@ class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory impl
     /**
      * @inheritDoc
      */
-    public function deleteOperation(string $entityName, array $criteria) : OperationInterface
+    public function deleteOperation(EntityInterface $entity) : OperationInterface
     {
         return new DoctrineDeleteEntityOperation(
+            $entity,
             $this->entityManager,
-            $entityName,
-            $criteria,
             $this->eventResolver,
             $this->eventDispatcher
         );

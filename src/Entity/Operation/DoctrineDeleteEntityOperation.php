@@ -25,31 +25,26 @@ use Vain\Core\Event\Resolver\EventResolverInterface;
  */
 class DoctrineDeleteEntityOperation extends AbstractDeleteEntityOperation
 {
+    private $entity;
+
     private $entityManager;
-
-    private $entityName;
-
-    private $criteria;
 
     /**
      * DoctrineDeleteEntityOperation constructor.
      *
+     * @param EntityInterface          $entity
      * @param EntityManagerInterface   $entityManager
-     * @param string                   $entityName
-     * @param array                    $criteria
      * @param EventResolverInterface   $eventResolver
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
+        EntityInterface $entity,
         EntityManagerInterface $entityManager,
-        string $entityName,
-        array $criteria,
         EventResolverInterface $eventResolver,
         EventDispatcherInterface $eventDispatcher
     ) {
+        $this->entity = $entity;
         $this->entityManager = $entityManager;
-        $this->entityName = $entityName;
-        $this->criteria = $criteria;
         parent::__construct($eventResolver, $eventDispatcher);
     }
 
@@ -58,11 +53,8 @@ class DoctrineDeleteEntityOperation extends AbstractDeleteEntityOperation
      */
     public function deleteEntity() : EntityInterface
     {
-        if (null === ($entity = $this->entityManager->getRepository($this->entityName)->findOneBy($this->criteria))) {
-            return null;
-        }
-        $this->entityManager->remove($entity);
+        $this->entityManager->remove($this->entity);
 
-        return $entity;
+        return $this->entity;
     }
 }
