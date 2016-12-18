@@ -22,6 +22,13 @@ use Doctrine\DBAL\Types\Type;
  */
 class TextArrayType extends Type
 {
+    /**
+     * @inheritDoc
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
 
     /**
      * @inheritDoc
@@ -44,7 +51,7 @@ class TextArrayType extends Type
      */
     public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
-        return sprintf('json_array_elements_text(%s)', $sqlExpr);
+        return sprintf('(select array_agg(json) from json_array_elements_text(%s) as json)', $sqlExpr);
     }
 
     /**

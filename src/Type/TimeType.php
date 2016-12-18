@@ -27,9 +27,9 @@ class TimeType extends Type
     /**
      * @inheritDoc
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
-        return $platform->getDateTimeTypeDeclarationSQL($fieldDeclaration);
+        return true;
     }
 
     /**
@@ -81,8 +81,8 @@ class TimeType extends Type
     /**
      * @inheritDoc
      */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return true;
+        return $platform->getDateTimeTypeDeclarationSQL($fieldDeclaration);
     }
 }
