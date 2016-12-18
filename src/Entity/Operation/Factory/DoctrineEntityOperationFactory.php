@@ -31,7 +31,6 @@ use Vain\Core\Operation\OperationInterface;
  */
 class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory implements EntityOperationFactoryInterface
 {
-
     private $entityManager;
 
     private $eventResolver;
@@ -63,25 +62,29 @@ class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory impl
      */
     public function createOperation(EntityInterface $entity) : OperationInterface
     {
-        return new DoctrineCreateEntityOperation(
-            $entity,
-            $this->entityManager,
-            $this->eventResolver,
-            $this->eventDispatcher
+        return $this->decorate(
+            new DoctrineCreateEntityOperation(
+                $entity,
+                $this->entityManager,
+                $this->eventResolver,
+                $this->eventDispatcher
+            )
         );
     }
 
     /**
      * @inheritDoc
      */
-    public function updateOperation(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
+    public function doUpdateOperation(EntityInterface $newEntity, EntityInterface $oldEntity) : OperationInterface
     {
-        return new DoctrineUpdateEntityOperation(
-            $newEntity,
-            $oldEntity,
-            $this->entityManager,
-            $this->eventResolver,
-            $this->eventDispatcher
+        return $this->decorate(
+            new DoctrineUpdateEntityOperation(
+                $newEntity,
+                $oldEntity,
+                $this->entityManager,
+                $this->eventResolver,
+                $this->eventDispatcher
+            )
         );
     }
 
@@ -90,11 +93,13 @@ class DoctrineEntityOperationFactory extends AbstractEntityOperationFactory impl
      */
     public function deleteOperation(EntityInterface $entity) : OperationInterface
     {
-        return new DoctrineDeleteEntityOperation(
-            $entity,
-            $this->entityManager,
-            $this->eventResolver,
-            $this->eventDispatcher
+        return $this->decorate(
+            new DoctrineDeleteEntityOperation(
+                $entity,
+                $this->entityManager,
+                $this->eventResolver,
+                $this->eventDispatcher
+            )
         );
     }
 }
