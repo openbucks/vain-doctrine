@@ -16,6 +16,7 @@ use Doctrine\Common\Cache\Cache as DoctrineCacheInterface;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Configuration as DoctrineORMConfiguration;
+use Vain\Core\Api\Extension\Storage\ApiExtensionStorageInterface;
 
 /**
  * Class DoctrineConfigurationFactory
@@ -24,6 +25,18 @@ use Doctrine\ORM\Configuration as DoctrineORMConfiguration;
  */
 class DoctrineConfigurationFactory
 {
+    private $extensionStorage;
+
+    /**
+     * DoctrineConfigurationFactory constructor.
+     *
+     * @param ApiExtensionStorageInterface $extensionStorage
+     */
+    public function __construct(ApiExtensionStorageInterface $extensionStorage)
+    {
+        $this->extensionStorage = $extensionStorage;
+    }
+
     /**
      * @param DoctrineCacheInterface $doctrineCache
      * @param string                 $applicationEnv
@@ -45,7 +58,13 @@ class DoctrineConfigurationFactory
         string $extension
     ) : DoctrineORMConfiguration
     {
-        $driver = new SimplifiedYamlDriver([$configDir => ''], $extension);
+        $paths = [];
+        foreach ($this->extensionStorage->getPaths() as $path => $namespace) {
+            $paths[$path] = $namespace;
+        }
+        $paths[$configDir] = '';
+
+        $driver = new SimplifiedYamlDriver($paths, $extension);
         $driver->setGlobalBasename($globalFileName);
 
         $config = Setup::createConfiguration(
