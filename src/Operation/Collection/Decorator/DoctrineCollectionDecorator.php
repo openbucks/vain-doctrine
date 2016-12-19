@@ -12,6 +12,9 @@ declare(strict_types = 1);
 
 namespace Vain\Doctrine\Operation\Collection\Decorator;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\ORMException;
+use Vain\Core\Result\FailedResult;
 use Vain\Doctrine\Entity\DoctrineEntityManager;
 use Vain\Core\Operation\Collection\OperationCollectionInterface;
 use Vain\Core\Operation\Collection\Decorator\AbstractOperationCollectionDecorator;
@@ -29,8 +32,8 @@ class DoctrineCollectionDecorator extends AbstractOperationCollectionDecorator
     /**
      * DoctrineCollectionDecorator constructor.
      *
-     * @param OperationCollectionInterface   $collection
-     * @param DoctrineEntityManager $entityManager
+     * @param OperationCollectionInterface $collection
+     * @param DoctrineEntityManager        $entityManager
      */
     public function __construct(OperationCollectionInterface $collection, DoctrineEntityManager $entityManager)
     {
@@ -43,14 +46,20 @@ class DoctrineCollectionDecorator extends AbstractOperationCollectionDecorator
      */
     public function execute() : ResultInterface
     {
-        $this->entityManager->init();
+        try {
+            $this->entityManager->init();
 
-        $result = parent::execute();
-        if (false === $result->getStatus()) {
-            return $result;
+            $result = parent::execute();
+            if (false === $result->getStatus()) {
+                return $result;
+            }
+
+            $this->entityManager->flush();
+        } catch (DBALException $exception) {
+            return new FailedResult('Internal System Error', [$exception->getMessage()]);
+        } catch (ORMException $exception) {
+            return new FailedResult('Internal System Error', [$exception->getMessage()]);
         }
-
-        $this->entityManager->flush();
 
         return $result;
     }
