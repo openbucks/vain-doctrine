@@ -74,7 +74,7 @@ class DoctrineEntityFactory implements EntityFactoryInterface
                     continue;
                 }
                 if (null === ($entity = $this->entityManager->find($associationMapping['targetEntity'], $value))) {
-                    return null;
+                    continue;
                 }
                 $parsedData[$associationMapping['fieldName']] = $entity;
             }
