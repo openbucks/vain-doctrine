@@ -70,7 +70,7 @@ class DoctrineEntityFactory implements EntityFactoryInterface
                 if (false === $associationMapping['type'] <= 2) {
                     continue;
                 }
-                if ($column !== $associationMapping['joinColumn']['name']) {
+                if ($column !== $associationMapping['joinColumns'][0]['name']) {
                     continue;
                 }
                 if (null === ($entity = $this->entityManager->find($associationMapping['targetEntity'], $value))) {
