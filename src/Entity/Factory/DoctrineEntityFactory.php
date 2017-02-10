@@ -24,7 +24,6 @@ use Vain\Core\Entity\Factory\EntityFactoryInterface;
  */
 class DoctrineEntityFactory implements EntityFactoryInterface
 {
-
     private $entityManager;
 
     /**
@@ -42,7 +41,7 @@ class DoctrineEntityFactory implements EntityFactoryInterface
      *
      * @return ClassMetadata
      */
-    public function getClassMetadata(string $entityName) : ClassMetadata
+    public function getClassMetadata(string $entityName): ClassMetadata
     {
         return $this->entityManager->getClassMetadata($entityName);
     }
@@ -58,8 +57,7 @@ class DoctrineEntityFactory implements EntityFactoryInterface
         EntityInterface $entity,
         ClassMetadata $classMetadata,
         array $entityData
-    ) : EntityInterface
-    {
+    ): EntityInterface {
         $parsedData = [];
         foreach ($entityData as $column => $value) {
             if (array_key_exists($column, $classMetadata->fieldNames)) {
@@ -73,10 +71,14 @@ class DoctrineEntityFactory implements EntityFactoryInterface
                 if ($column !== $associationMapping['joinColumns'][0]['name']) {
                     continue;
                 }
-                if (null === ($entity = $this->entityManager->find($associationMapping['targetEntity'], $value))) {
+                if (null === ($associatedEntity = $this->entityManager->find(
+                        $associationMapping['targetEntity'],
+                        $value
+                    ))
+                ) {
                     continue;
                 }
-                $parsedData[$associationMapping['fieldName']] = $entity;
+                $parsedData[$associationMapping['fieldName']] = $associatedEntity;
             }
         }
 
@@ -86,7 +88,7 @@ class DoctrineEntityFactory implements EntityFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createEntity(string $entityName, array $entityData) : EntityInterface
+    public function createEntity(string $entityName, array $entityData): EntityInterface
     {
         $classMetadata = $this->getClassMetadata($entityName);
         /**
@@ -100,7 +102,7 @@ class DoctrineEntityFactory implements EntityFactoryInterface
     /**
      * @inheritDoc
      */
-    public function updateEntity(EntityInterface $entity, array $entityData) : EntityInterface
+    public function updateEntity(EntityInterface $entity, array $entityData): EntityInterface
     {
         $classMetadata = $this->getClassMetadata(get_class($entity));
 
