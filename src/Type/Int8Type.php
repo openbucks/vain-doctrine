@@ -61,4 +61,12 @@ class Int8Type extends Type
 
         return (int) $value;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
 }
