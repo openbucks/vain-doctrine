@@ -16,11 +16,11 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
 /**
- * Class VainBigIntType
+ * Class Int8Type
  *
  * @author Taras P. Girnyk <taras.p.gyrnik@gmail.com>
  */
-class VainBigIntType extends Type
+class Int8Type extends Type
 {
     /**
      * {@inheritdoc}
