@@ -14,11 +14,11 @@ namespace Vain\Doctrine\Operation\Collection\Decorator;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
-use Vain\Core\Result\FailedResult;
 use Vain\Doctrine\Entity\DoctrineEntityManager;
 use Vain\Core\Operation\Collection\OperationCollectionInterface;
 use Vain\Core\Operation\Collection\Decorator\AbstractOperationCollectionDecorator;
 use Vain\Core\Result\ResultInterface;
+use Vain\Doctrine\Operation\Collection\Result\DoctrineCollectionFailedResult;
 
 /**
  * Class DoctrineCollectionDecorator
@@ -56,9 +56,9 @@ class DoctrineCollectionDecorator extends AbstractOperationCollectionDecorator
 
             $this->entityManager->flush();
         } catch (DBALException $exception) {
-            return new FailedResult('Internal System Error', [$exception->getMessage()]);
+            return new DoctrineCollectionFailedResult($exception);
         } catch (ORMException $exception) {
-            return new FailedResult('Internal System Error', [$exception->getMessage()]);
+            return new DoctrineCollectionFailedResult($exception);
         }
 
         return $result;
