@@ -2,4 +2,4 @@ imports:
   - { resource: '../di.yml' }
 
 services:
-  doctrine.cache: '@doctrine.cache.redis'
+  doctrine.cache: '@doctrine.cache.apcu'
