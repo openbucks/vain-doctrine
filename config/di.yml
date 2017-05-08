@@ -28,7 +28,7 @@ services:
       - '%doctrine.entity.map.extension%'
   doctrine.config.factory:
     class: Vain\Doctrine\Factory\DoctrineConfigurationFactory
-    arguments: ['@api.extension.storage']
+    arguments: ['@api.extension.entity.storage']
   doctrine.event.manager:
     class: Vain\Doctrine\Event\Manager\DoctrineEventManager
     arguments: ['@time.factory']
