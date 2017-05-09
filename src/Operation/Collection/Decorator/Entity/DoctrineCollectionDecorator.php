@@ -10,7 +10,7 @@
  */
 declare(strict_types = 1);
 
-namespace Vain\Doctrine\Operation\Collection\Decorator;
+namespace Vain\Doctrine\Operation\Collection\Decorator\Entity;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;

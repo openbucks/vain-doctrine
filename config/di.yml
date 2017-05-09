@@ -96,11 +96,16 @@ services:
     class: Vain\Doctrine\Document\Operation\Factory\DoctrineDocumentOperationFactory
     arguments: ['@doctrine.document.manager', '@event.resolver', '@collection.event.dispatcher']
   operation.collection.factory.doctrine:
-    class: Vain\Doctrine\Operation\Collection\Factory\Decorator\DoctrineCollectionFactoryDecorator
+    class: Vain\Doctrine\Operation\Collection\Factory\Decorator\Entity\DoctrineCollectionFactoryDecorator
     decorates: operation.collection.factory
     decoration_priority: 300
     arguments: ['@operation.collection.factory.doctrine.inner', '@doctrine.entity.manager']
+  operation.collection.factory.document:
+    class: Vain\Doctrine\Operation\Collection\Factory\Decorator\Document\DoctrineCollectionFactoryDecorator
+    decorates: operation.collection.factory
+    decoration_priority: 400
+    arguments: ['@operation.collection.factory.document.inner', '@doctrine.document.manager']
   doctrine.event.handler:
     parent: event.handler.abstract
     class: Vain\Doctrine\Event\DoctrineEventHandler
-    arguments: ['@doctrine.entity.manager']
+    arguments: ['@doctrine.entity.manager', '@doctrine.document.manager']
