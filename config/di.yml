@@ -6,6 +6,12 @@ parameters:
   doctrine.dir: 'doctrine'
   doctrine.proxy.name: 'Proxy'
 
+  doctrine.odm.connection.name: 'mongo'
+  doctrine.odm.database.name: 'mongo'
+  doctrine.odm.dir: 'odm'
+  doctrine.odm.map.file: 'entitymap'
+  doctrine.odm.map.extension: '.odm.yml'
+
 services:
   doctrine.entity.manager:
     class: Doctrine\ORM\EntityManager
@@ -13,6 +19,15 @@ services:
     arguments:
       - '@database.mvcc'
       - '@doctrine.config'
+      - '@doctrine.event.manager'
+      - '@time.factory'
+  doctrine.document.manager:
+    class: Doctrine\ODM\MongoDB\DocumentManager
+    factory: ['@doctrine.document.manager.factory', 'create']
+    arguments:
+      - '@config'
+      - '%doctrine.odm.connection.name%'
+      - '@doctrine.odm.config'
       - '@doctrine.event.manager'
       - '@time.factory'
   doctrine.config:
@@ -28,6 +43,18 @@ services:
       - '%doctrine.entity.map.extension%'
   doctrine.config.factory:
     class: Vain\Doctrine\Factory\DoctrineConfigurationFactory
+    arguments: ['@api.extension.entity.storage']
+  doctrine.odm.config:
+    class: Doctrine\ODM\MongoDB\Configuration
+    factory: ['@doctrine.odm.config.factory', getConfiguration]
+    arguments:
+      - '@doctrine.cache'
+      - '%app.dir%/%config.dir%'
+      - '%app.dir%/%cache.dir%/%doctrine.odm.dir%'
+      - '%doctrine.odm.map.file%'
+      - '%doctrine.odm.map.extension%'
+  doctrine.odm.config.factory:
+    class: Vain\Doctrine\Factory\DoctrineODMConfigurationFactory
     arguments: ['@api.extension.entity.storage']
   doctrine.event.manager:
     class: Vain\Doctrine\Event\Manager\DoctrineEventManager
@@ -52,19 +79,33 @@ services:
     arguments: ['@cache.redis']
   doctrine.entity.manager.factory:
     class: Vain\Doctrine\Factory\DoctrineEntityManagerFactory
+  doctrine.document.manager.factory:
+    class: Vain\Doctrine\Factory\DoctrineDocumentManagerFactory
   entity.factory.doctrine:
     class: Vain\Doctrine\Entity\Factory\DoctrineEntityFactory
     arguments: ['@doctrine.entity.manager']
+  document.factory.doctrine:
+    class: Vain\Doctrine\Document\Factory\DoctrineDocumentFactory
+    arguments: ['@doctrine.document.manager']
   entity.operation.factory.doctrine:
     parent: entity.operation.factory.abstract
     class: Vain\Doctrine\Entity\Operation\Factory\DoctrineEntityOperationFactory
     arguments: ['@doctrine.entity.manager', '@event.resolver', '@collection.event.dispatcher']
+  document.operation.factory.doctrine:
+    parent: document.operation.factory.abstract
+    class: Vain\Doctrine\Document\Operation\Factory\DoctrineDocumentOperationFactory
+    arguments: ['@doctrine.document.manager', '@event.resolver', '@collection.event.dispatcher']
   operation.collection.factory.doctrine:
-    class: Vain\Doctrine\Operation\Collection\Factory\Decorator\DoctrineCollectionFactoryDecorator
+    class: Vain\Doctrine\Operation\Collection\Factory\Decorator\Entity\DoctrineCollectionFactoryDecorator
     decorates: operation.collection.factory
     decoration_priority: 300
     arguments: ['@operation.collection.factory.doctrine.inner', '@doctrine.entity.manager']
+  operation.collection.factory.document:
+    class: Vain\Doctrine\Operation\Collection\Factory\Decorator\Document\DoctrineCollectionFactoryDecorator
+    decorates: operation.collection.factory
+    decoration_priority: 400
+    arguments: ['@operation.collection.factory.document.inner', '@doctrine.document.manager']
   doctrine.event.handler:
     parent: event.handler.abstract
     class: Vain\Doctrine\Event\DoctrineEventHandler
-    arguments: ['@doctrine.entity.manager']
+    arguments: ['@doctrine.entity.manager', '@doctrine.document.manager']

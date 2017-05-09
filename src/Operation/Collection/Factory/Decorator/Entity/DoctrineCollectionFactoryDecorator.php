@@ -10,10 +10,10 @@
  */
 declare(strict_types = 1);
 
-namespace Vain\Doctrine\Operation\Collection\Factory\Decorator;
+namespace Vain\Doctrine\Operation\Collection\Factory\Decorator\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Vain\Doctrine\Operation\Collection\Decorator\DoctrineCollectionDecorator;
+use Vain\Doctrine\Operation\Collection\Decorator\Entity\DoctrineCollectionDecorator;
 use Vain\Core\Operation\Collection\OperationCollectionInterface;
 use Vain\Core\Operation\Collection\Factory\OperationCollectionFactoryInterface;
 use Vain\Core\Operation\Collection\Factory\Decorator\AbstractOperationCollectionFactoryDecorator;
