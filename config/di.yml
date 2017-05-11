@@ -49,13 +49,14 @@ services:
     factory: ['@doctrine.odm.config.factory', getConfiguration]
     arguments:
       - '@doctrine.cache'
+      - '%app.env%'
       - '%app.dir%/%config.dir%'
       - '%app.dir%/%cache.dir%/%doctrine.odm.dir%'
       - '%doctrine.odm.map.file%'
       - '%doctrine.odm.map.extension%'
   doctrine.odm.config.factory:
     class: Vain\Doctrine\Factory\DoctrineODMConfigurationFactory
-    arguments: ['@api.extension.entity.storage']
+    arguments: ['@api.extension.document.storage']
   doctrine.event.manager:
     class: Vain\Doctrine\Event\Manager\DoctrineEventManager
     arguments: ['@time.factory']

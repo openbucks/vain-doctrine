@@ -48,6 +48,7 @@ class DoctrineODMConfigurationFactory
      */
     public function getConfiguration(
         DoctrineCacheInterface $doctrineCache,
+        string $applicationEnv,
         string $configDir,
         string $cacheDir,
         string $globalFileName,
@@ -70,6 +71,7 @@ class DoctrineODMConfigurationFactory
         $config->setHydratorNamespace('Hydrators');
         $config->setMetadataDriverImpl($driver);
         $config->setMetadataCacheImpl($doctrineCache);
+        $config->setAutoGenerateProxyClasses('dev' === $applicationEnv);
 
         return $config;
     }
