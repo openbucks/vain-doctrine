@@ -49,6 +49,7 @@ services:
     factory: ['@doctrine.odm.config.factory', getConfiguration]
     arguments:
       - '@doctrine.cache'
+      - '%app.env%'
       - '%app.dir%/%config.dir%'
       - '%app.dir%/%cache.dir%/%doctrine.odm.dir%'
       - '%doctrine.odm.map.file%'

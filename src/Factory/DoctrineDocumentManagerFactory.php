@@ -104,6 +104,7 @@ class DoctrineDocumentManagerFactory
         list ($username, $password, $connectionString, $database, $options, $driverOptions)
             = $this->getCredentials($configData['connections'][$connectionName]);
         $dsn = sprintf('mongodb://%s:%s@%s/', $username, $password, $connectionString);
+        $configuration->setDefaultDB($configData['connections'][$connectionName]['dbname']);
         return DoctrineDocumentManager::createWithTimeFactory(
             new Connection($dsn, $options, $configuration, $eventManager, $driverOptions),
             $configuration,
