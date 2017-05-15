@@ -8,7 +8,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  * @link      https://github.com/allflame/vain-doctrine
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vain\Doctrine\Document\Factory;
 
@@ -46,10 +46,23 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
         return $this->documentManager->getClassMetadata($documentName);
     }
 
+    public function getDocumentName(array $embededData, array $documentData)
+    {
+        if (array_key_exists('targetDocument', $embededData)) {
+            return $embededData['targetDocument'];
+        }
+
+        if (array_key_exists($documentData[$embededData['discriminatorField']], $embededData['discriminatorMap'])) {
+            return $embededData['discriminatorMap'][$documentData[$embededData['discriminatorField']]];
+        }
+
+        return $embededData['discriminatorMap'][$embededData['defaultDiscriminatorValue']];
+    }
+
     /**
      * @param DocumentInterface $document
-     * @param ClassMetadata     $classMetadata
-     * @param array             $documentData
+     * @param ClassMetadata $classMetadata
+     * @param array $documentData
      *
      * @return DocumentInterface
      */
@@ -57,28 +70,30 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
         DocumentInterface $document,
         ClassMetadata $classMetadata,
         array $documentData
-    ): DocumentInterface {
+    ): DocumentInterface
+    {
         $parsedData = [];
         foreach ($documentData as $column => $value) {
-            if (array_key_exists($column, $classMetadata->fieldMappings)) {
-                $parsedData[$column] = $value;
+            if (array_key_exists($column, $classMetadata->associationMappings)) {
+                $associationMapping = $classMetadata->associationMappings[$column];
+                switch ($associationMapping['type']) {
+                    case 'one':
+                        $fieldValue = $this->createDocument($this->getDocumentName($associationMapping['targetDocument'], $value), $value);
+                        break;
+                    case 'many':
+                        $fieldValue = [];
+                        foreach ($value as $documenValue) {
+                            $fieldValue[] = $this->createDocument($this->getDocumentName($associationMapping['targetDocument'], $documenValue), $documenValue);
+                        }
+                        break;
+                }
+                $parsedData[$column] = $fieldValue;
+
                 continue;
             }
-            foreach ($classMetadata->associationMappings as $associationMapping) {
-                if (false === $associationMapping['type'] <= 2) {
-                    continue;
-                }
-                if ($column !== $associationMapping['joinColumns'][0]['name']) {
-                    continue;
-                }
-                if (null === ($associatedDocument = $this->documentManager->find(
-                        $associationMapping['targetDocument'],
-                        $value
-                    ))
-                ) {
-                    continue;
-                }
-                $parsedData[$associationMapping['fieldName']] = $associatedDocument;
+
+            if (array_key_exists($column, $classMetadata->fieldMappings)) {
+                $parsedData[$column] = $value;
             }
         }
 
