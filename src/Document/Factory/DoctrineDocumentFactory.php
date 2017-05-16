@@ -16,6 +16,8 @@ use Doctrine\ODM\MongoDB\Mapping\ClassMetadataInfo as ClassMetadata;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Vain\Core\Document\DocumentInterface;
 use Vain\Core\Document\Factory\DocumentFactoryInterface;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Vain\Doctrine\Exception\DocumentMappingException;
 
 /**
  * Class DoctrineDocumentFactory
@@ -66,6 +68,7 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
     {
         $documentName = get_class($document);
         $classMetadata = $this->getClassMetadata($documentName);
+        $associationOriginals = [];
         foreach ($classMetadata->associationMappings as $fieldName => $mapping) {
           if (isset($mapping['discriminatorField'])) {
             $discriminatorField = $mapping['discriminatorField'];
@@ -74,11 +77,20 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
             }
             if (!isset($documentData[$fieldName][$discriminatorField])) {
               $assosiation = $classMetadata->reflFields[$fieldName]->getValue($document);
+              $associationOriginals[$fieldName] = $assosiation;
               $documentData[$fieldName][$discriminatorField] = $this->getClassMetadata(get_class($assosiation))->reflFields[$discriminatorField]->getValue($assosiation);
             }
           }
         }
-        $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate($document, $documentData);
+        try {
+          $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate($document, $documentData);
+        } catch (MappingException $me) {
+          throw new DocumentMappingException($this, $document, $me);
+        }
+        $uow = $this->documentManager->getUnitOfWork();
+        foreach ($associationOriginals as $fieldName => $assosiation) {
+          $uow->setOriginalDocumentData($classMetadata->reflFields[$fieldName]->getValue($document), $assosiation->toArray());
+        }
         if ($document instanceof Proxy) {
             $document->__isInitialized__ = true;
             $document->__setInitializer(null);
