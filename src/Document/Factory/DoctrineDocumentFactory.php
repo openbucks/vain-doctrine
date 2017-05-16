@@ -16,6 +16,7 @@ use Doctrine\ODM\MongoDB\Mapping\ClassMetadataInfo as ClassMetadata;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Vain\Core\Document\DocumentInterface;
 use Vain\Core\Document\Factory\DocumentFactoryInterface;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 
 /**
  * Class DoctrineDocumentFactory
@@ -78,7 +79,11 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
             }
           }
         }
-        $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate($document, $documentData);
+        try {
+          $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate($document, $documentData);
+        } catch (MappingException $me) {
+          throw new \Exception('Mapping failed', 0, $me);
+        }
         if ($document instanceof Proxy) {
             $document->__isInitialized__ = true;
             $document->__setInitializer(null);
