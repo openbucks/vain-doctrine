@@ -64,7 +64,21 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
      */
     public function updateDocument(DocumentInterface $document, array $documentData): DocumentInterface
     {
-        $data = $this->documentManager->getHydratorFactory()->getHydratorFor(get_class($document))->hydrate($document, $documentData, $hints);
+        $documentName = get_class($document);
+        $classMetadata = $this->getClassMetadata($documentName);
+        foreach ($classMetadata->associationMappings as $fieldName => $mapping) {
+          if (isset($mapping['discriminatorField'])) {
+            $discriminatorField = $mapping['discriminatorField'];
+            if (!isset($documentData[$fieldName])) {
+              $documentData[$fieldName] = [];
+            }
+            if (!isset($documentData[$fieldName][$discriminatorField])) {
+              $assosiation = $classMetadata->reflFields[$fieldName]->getValue($document);
+              $documentData[$fieldName][$discriminatorField] = $this->getClassMetadata(get_class($assosiation))->reflFields[$discriminatorField]->getValue($assosiation);
+            }
+          }
+        }
+        $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate($document, $documentData);
         if ($document instanceof Proxy) {
             $document->__isInitialized__ = true;
             $document->__setInitializer(null);
