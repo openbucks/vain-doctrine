@@ -8,7 +8,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  * @link      https://github.com/allflame/vain-doctrine
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vain\Doctrine\Document\Factory;
 
@@ -46,72 +46,17 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
         return $this->documentManager->getClassMetadata($documentName);
     }
 
-    public function getDocumentName(array $embededData, array $documentData)
-    {
-        if (array_key_exists('targetDocument', $embededData)) {
-            return $embededData['targetDocument'];
-        }
-
-        if (array_key_exists($documentData[$embededData['discriminatorField']], $embededData['discriminatorMap'])) {
-            return $embededData['discriminatorMap'][$documentData[$embededData['discriminatorField']]];
-        }
-
-        return $embededData['discriminatorMap'][$embededData['defaultDiscriminatorValue']];
-    }
-
-    /**
-     * @param DocumentInterface $document
-     * @param ClassMetadata $classMetadata
-     * @param array $documentData
-     *
-     * @return DocumentInterface
-     */
-    public function populate(
-        DocumentInterface $document,
-        ClassMetadata $classMetadata,
-        array $documentData
-    ): DocumentInterface
-    {
-        $parsedData = [];
-        foreach ($documentData as $column => $value) {
-            if (array_key_exists($column, $classMetadata->associationMappings)) {
-                $associationMapping = $classMetadata->associationMappings[$column];
-                switch ($associationMapping['type']) {
-                    case 'one':
-                        $fieldValue = $this->createDocument($this->getDocumentName($associationMapping['targetDocument'], $value), $value);
-                        break;
-                    case 'many':
-                        $fieldValue = [];
-                        foreach ($value as $documenValue) {
-                            $fieldValue[] = $this->createDocument($this->getDocumentName($associationMapping['targetDocument'], $documenValue), $documenValue);
-                        }
-                        break;
-                }
-                $parsedData[$column] = $fieldValue;
-
-                continue;
-            }
-
-            if (array_key_exists($column, $classMetadata->fieldMappings)) {
-                $parsedData[$column] = $value;
-            }
-        }
-
-        return $document->fromArray($parsedData);
-    }
-
     /**
      * @inheritDoc
      */
     public function createDocument(string $documentName, array $documentData): DocumentInterface
     {
-        $classMetadata = $this->getClassMetadata($documentName);
         /**
          * @var DocumentInterface $document
          */
-        $document = $classMetadata->getReflectionClass()->newInstance();
+        $document = $this->getClassMetadata($documentName)->getReflectionClass()->newInstance();
 
-        return $this->populate($document, $classMetadata, $documentData);
+        return $this->updateDocument($document, $documentData);
     }
 
     /**
@@ -119,8 +64,33 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
      */
     public function updateDocument(DocumentInterface $document, array $documentData): DocumentInterface
     {
-        $classMetadata = $this->getClassMetadata(get_class($document));
-
-        return $this->populate($document, $classMetadata, $documentData);
+        $documentName = get_class($document);
+        $classMetadata = $this->getClassMetadata($documentName);
+        foreach ($classMetadata->associationMappings as $fieldName => $mapping) {
+          if (isset($mapping['discriminatorField'])) {
+            $discriminatorField = $mapping['discriminatorField'];
+            if (!isset($documentData[$fieldName])) {
+              $documentData[$fieldName] = [];
+            }
+            if (!isset($documentData[$fieldName][$discriminatorField])) {
+              $assosiation = $classMetadata->reflFields[$fieldName]->getValue($document);
+              $documentData[$fieldName][$discriminatorField] = $this->getClassMetadata(get_class($assosiation))->reflFields[$discriminatorField]->getValue($assosiation);
+            }
+          }
+        }
+        $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate($document, $documentData);
+        if ($document instanceof Proxy) {
+            $document->__isInitialized__ = true;
+            $document->__setInitializer(null);
+            $document->__setCloner(null);
+            // lazy properties may be left uninitialized
+            $properties = $document->__getLazyProperties();
+            foreach ($properties as $propertyName => $property) {
+                if ( ! isset($document->$propertyName)) {
+                    $document->$propertyName = $properties[$propertyName];
+                }
+            }
+        }
+        return $document;
     }
 }
