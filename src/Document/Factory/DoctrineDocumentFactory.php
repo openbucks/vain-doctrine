@@ -47,56 +47,16 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
     }
 
     /**
-     * @param DocumentInterface $document
-     * @param ClassMetadata     $classMetadata
-     * @param array             $documentData
-     *
-     * @return DocumentInterface
-     */
-    public function populate(
-        DocumentInterface $document,
-        ClassMetadata $classMetadata,
-        array $documentData
-    ): DocumentInterface {
-        $parsedData = [];
-        foreach ($documentData as $column => $value) {
-            if (array_key_exists($column, $classMetadata->fieldMappings)) {
-                $parsedData[$column] = $value;
-                continue;
-            }
-            foreach ($classMetadata->associationMappings as $associationMapping) {
-                if (false === $associationMapping['type'] <= 2) {
-                    continue;
-                }
-                if ($column !== $associationMapping['joinColumns'][0]['name']) {
-                    continue;
-                }
-                if (null === ($associatedDocument = $this->documentManager->find(
-                        $associationMapping['targetDocument'],
-                        $value
-                    ))
-                ) {
-                    continue;
-                }
-                $parsedData[$associationMapping['fieldName']] = $associatedDocument;
-            }
-        }
-
-        return $document->fromArray($parsedData);
-    }
-
-    /**
      * @inheritDoc
      */
     public function createDocument(string $documentName, array $documentData): DocumentInterface
     {
-        $classMetadata = $this->getClassMetadata($documentName);
         /**
          * @var DocumentInterface $document
          */
-        $document = $classMetadata->getReflectionClass()->newInstance();
+        $document = $this->getClassMetadata($documentName)->getReflectionClass()->newInstance();
 
-        return $this->populate($document, $classMetadata, $documentData);
+        return $this->updateDocument($document, $documentData);
     }
 
     /**
@@ -104,8 +64,19 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
      */
     public function updateDocument(DocumentInterface $document, array $documentData): DocumentInterface
     {
-        $classMetadata = $this->getClassMetadata(get_class($document));
-
-        return $this->populate($document, $classMetadata, $documentData);
+        $data = $this->documentManager->getHydratorFactory()->getHydratorFor(get_class($document))->hydrate($document, $documentData, $hints);
+        if ($document instanceof Proxy) {
+            $document->__isInitialized__ = true;
+            $document->__setInitializer(null);
+            $document->__setCloner(null);
+            // lazy properties may be left uninitialized
+            $properties = $document->__getLazyProperties();
+            foreach ($properties as $propertyName => $property) {
+                if ( ! isset($document->$propertyName)) {
+                    $document->$propertyName = $properties[$propertyName];
+                }
+            }
+        }
+        return $document;
     }
 }
