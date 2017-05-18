@@ -8,15 +8,15 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  * @link      https://github.com/allflame/vain-doctrine
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vain\Doctrine\Document\Factory;
 
-use Doctrine\ODM\MongoDB\Mapping\ClassMetadataInfo as ClassMetadata;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadataInfo as ClassMetadata;
 use Vain\Core\Document\DocumentInterface;
 use Vain\Core\Document\Factory\DocumentFactoryInterface;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Vain\Doctrine\Exception\DocumentMappingException;
 
 /**
@@ -53,12 +53,29 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
      */
     public function createDocument(string $documentName, array $documentData): DocumentInterface
     {
-        /**
-         * @var DocumentInterface $document
-         */
-        $document = $this->getClassMetadata($documentName)->getReflectionClass()->newInstance();
+        $class = $this->documentManager->getClassMetadata($documentName);
 
-        return $this->updateDocument($document, $documentData);
+        $discriminatorValue = null;
+        if (isset($class->discriminatorField, $data[$class->discriminatorField])) {
+            $discriminatorValue = $documentData[$class->discriminatorField];
+        } elseif (isset($class->defaultDiscriminatorValue)) {
+            $discriminatorValue = $class->defaultDiscriminatorValue;
+        }
+
+        if ($discriminatorValue !== null) {
+            $className = isset($class->discriminatorMap[$discriminatorValue])
+                ? $class->discriminatorMap[$discriminatorValue]
+                : $discriminatorValue;
+
+            $class = $this->dm->getClassMetadata($className);
+
+            unset($documentData[$class->discriminatorField]);
+        }
+
+        $document = $class->newInstance();
+        $this->documentManager->getHydratorFactory()->hydrate($document, $documentData);
+
+        return $document;
     }
 
     /**
@@ -70,26 +87,34 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
         $classMetadata = $this->getClassMetadata($documentName);
         $associationOriginals = [];
         foreach ($classMetadata->associationMappings as $fieldName => $mapping) {
-          if (isset($mapping['discriminatorField'])) {
-            $discriminatorField = $mapping['discriminatorField'];
-            if (!isset($documentData[$fieldName])) {
-              $documentData[$fieldName] = [];
+            if (isset($mapping['discriminatorField'])) {
+                $discriminatorField = $mapping['discriminatorField'];
+                if (!isset($documentData[$fieldName])) {
+                    $documentData[$fieldName] = [];
+                }
+                if (!isset($documentData[$fieldName][$discriminatorField])) {
+                    $assosiation = $classMetadata->reflFields[$fieldName]->getValue($document);
+                    $associationOriginals[$fieldName] = $assosiation;
+                    $documentData[$fieldName][$discriminatorField] = $this->getClassMetadata(
+                        get_class($assosiation)
+                    )->reflFields[$discriminatorField]->getValue($assosiation);
+                }
             }
-            if (!isset($documentData[$fieldName][$discriminatorField])) {
-              $assosiation = $classMetadata->reflFields[$fieldName]->getValue($document);
-              $associationOriginals[$fieldName] = $assosiation;
-              $documentData[$fieldName][$discriminatorField] = $this->getClassMetadata(get_class($assosiation))->reflFields[$discriminatorField]->getValue($assosiation);
-            }
-          }
         }
         try {
-          $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate($document, $documentData);
+            $data = $this->documentManager->getHydratorFactory()->getHydratorFor($documentName)->hydrate(
+                $document,
+                $documentData
+            );
         } catch (MappingException $me) {
-          throw new DocumentMappingException($this, $document, $me);
+            throw new DocumentMappingException($this, $document, $me);
         }
         $uow = $this->documentManager->getUnitOfWork();
         foreach ($associationOriginals as $fieldName => $assosiation) {
-          $uow->setOriginalDocumentData($classMetadata->reflFields[$fieldName]->getValue($document), $assosiation->toArray());
+            $uow->setOriginalDocumentData(
+                $classMetadata->reflFields[$fieldName]->getValue($document),
+                $assosiation->toArray()
+            );
         }
         if ($document instanceof Proxy) {
             $document->__isInitialized__ = true;
@@ -98,11 +123,12 @@ class DoctrineDocumentFactory implements DocumentFactoryInterface
             // lazy properties may be left uninitialized
             $properties = $document->__getLazyProperties();
             foreach ($properties as $propertyName => $property) {
-                if ( ! isset($document->$propertyName)) {
+                if (!isset($document->$propertyName)) {
                     $document->$propertyName = $properties[$propertyName];
                 }
             }
         }
+
         return $document;
     }
 }
