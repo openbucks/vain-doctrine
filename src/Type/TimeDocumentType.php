@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Vain\Doctrine\Type;
 
 use Doctrine\ODM\MongoDB\Types\Type;
-use Vain\Core\Locale\UsLocale;
-use Vain\Core\Time\Time;
+use Vain\Core\Time\Factory\TimeFactoryInterface;
 use Vain\Core\Time\TimeInterface;
-use Vain\Core\Time\Zone\TimeZone;
 
 /**
  * Class TimeDocumentType
@@ -25,6 +23,21 @@ use Vain\Core\Time\Zone\TimeZone;
  */
 class TimeDocumentType extends Type
 {
+    private $timeFactory;
+
+    /**
+     * @param TimeFactoryInterface $timeFactory
+     *
+     * @return $this
+     */
+    public function setTimeFactory(TimeFactoryInterface $timeFactory)
+    {
+        $this->timeFactory = $timeFactory;
+
+
+        return $this;
+    }
+
     public function convertToDatabaseValue($value)
     {
         if (null === $value) {
@@ -44,27 +57,6 @@ class TimeDocumentType extends Type
             return $value;
         }
 
-        $dateTime = new \DateTime($value);
-        $timeZone = $dateTime->getTimezone()->getName();
-        $timeZone = new TimeZone(
-            $timeZone,
-            $timeZone,
-            (new \DateTime($value))->setTimezone(new \DateTimeZone($timeZone))->format(
-                'T'
-            )
-        );
-        $targetZone = new TimeZone(
-            'Ameriza/Los_Angeles',
-            'Ameriza/Los_Angeles',
-            (new \DateTime($value))->setTimezone(new \DateTimeZone('America/Los_Angeles'))->format(
-                'T'
-            )
-        );
-
-        return (new Time(
-            $value, new UsLocale(), $timeZone,
-            (new Time('now', new UsLocale(), $timeZone))
-                ->setTimezone($targetZone)
-        ))->setTimezone($targetZone);
+        return $this->timeFactory->createFromString($value);
     }
 }
