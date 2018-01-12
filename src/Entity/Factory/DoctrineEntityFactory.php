@@ -8,7 +8,7 @@
  * @license   https://opensource.org/licenses/MIT MIT License
  * @link      https://github.com/allflame/vain-doctrine
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vain\Doctrine\Entity\Factory;
 
@@ -44,6 +44,30 @@ class DoctrineEntityFactory implements EntityFactoryInterface
     public function getClassMetadata(string $entityName): ClassMetadata
     {
         return $this->entityManager->getClassMetadata($entityName);
+    }
+
+    public function getEntityName(ClassMetadata $classMetadata, array $entityData): string
+    {
+        if (ClassMetadata::INHERITANCE_TYPE_NONE === $classMetadata->inheritanceType) {
+            return $classMetadata->name;
+        }
+        if (false === array_key_exists($classMetadata->discriminatorColumn['name'], $entityData)) {
+            throw new MissingDiscriminatorColumnException(
+                $this,
+                $classMetadata->discriminatorColumn['name'],
+                $entityData
+            );
+        }
+        $discriminatorColumnValue = $entityData[$classMetadata->discriminatorColumn['name']];
+        if (false === array_key_exists($discriminatorColumnValue, $classMetadata->discriminatorMap)) {
+            throw new UnknownDiscriminatorValueException(
+                $this,
+                $discriminatorColumnValue,
+                $classMetadata->discriminatorMap
+            );
+        }
+
+        return $classMetadata->discriminatorMap[$discriminatorColumnValue];
     }
 
     /**
@@ -90,7 +114,9 @@ class DoctrineEntityFactory implements EntityFactoryInterface
      */
     public function createEntity(string $entityName, array $entityData): EntityInterface
     {
-        $classMetadata = $this->getClassMetadata($entityName);
+        $classMetadata = $this->getClassMetadata(
+            $this->getEntityName($this->getClassMetadata($entityName), $entityData)
+        );
         /**
          * @var EntityInterface $entity
          */
