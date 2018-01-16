@@ -14,6 +14,7 @@ parameters:
 
 services:
   doctrine.entity.manager:
+    public: true
     class: Doctrine\ORM\EntityManager
     factory: ['@doctrine.entity.manager.factory', 'create']
     arguments:
@@ -22,6 +23,7 @@ services:
       - '@doctrine.event.manager'
       - '@time.factory'
   doctrine.document.manager:
+    public: true
     class: Doctrine\ODM\MongoDB\DocumentManager
     factory: ['@doctrine.document.manager.factory', 'create']
     arguments:
