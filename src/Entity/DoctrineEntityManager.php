@@ -110,7 +110,7 @@ class DoctrineEntityManager extends EntityManager
     /**
      * @inheritDoc
      */
-    public function flush($entity = null)
+    public function flush($document = null, array $options = [])
     {
         $this->flushLevel--;
 
@@ -122,7 +122,7 @@ class DoctrineEntityManager extends EntityManager
             throw new LevelIntegrityDoctrineException($this, $this->flushLevel);
         }
 
-        parent::flush($entity);
+        parent::flush($document);
 
         return $this;
     }

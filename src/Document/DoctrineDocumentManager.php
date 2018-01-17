@@ -16,7 +16,6 @@ use Doctrine\Common\EventManager;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\ORMException;
 use Vain\Doctrine\Exception\LevelIntegrityDoctrineException;
 use Vain\Core\Time\Factory\TimeFactoryInterface;
@@ -102,7 +101,7 @@ class DoctrineDocumentManager extends DocumentManager
     /**
      * @inheritDoc
      */
-    public function flush($entity = null)
+    public function flush($document = null, array $options = [])
     {
         $this->flushLevel--;
 
@@ -114,7 +113,7 @@ class DoctrineDocumentManager extends DocumentManager
             throw new LevelIntegrityDoctrineException($this, $this->flushLevel);
         }
 
-        parent::flush($entity);
+        parent::flush($document);
 
         return $this;
     }
