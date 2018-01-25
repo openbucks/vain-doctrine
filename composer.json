@@ -21,7 +21,8 @@
     "opensoft/doctrine-postgres-types": "^1.3.1",
     "vain/core": "^0.4",
     "vain/pdo": "^0.4",
-    "vain/redis": "^0.4"
+    "vain/redis": "^0.4",
+    "vain/mongo": "^0.4"
   },
   "repositories": [
     {
