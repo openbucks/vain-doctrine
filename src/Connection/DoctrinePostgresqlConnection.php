@@ -23,6 +23,8 @@ class DoctrinePostgresqlConnection extends AbstractPostgreSQLDriver implements C
 {
     private $connection;
 
+    private $force = false;
+
     /**
      * PostgresqlDoctrineDriver constructor.
      *
@@ -36,9 +38,17 @@ class DoctrinePostgresqlConnection extends AbstractPostgreSQLDriver implements C
     /**
      * @inheritDoc
      */
+    public function forceReconnect($force = true)
+    {
+        $this->force = $force;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function connect(array $params, $username = null, $password = null, array $driverOptions = [])
     {
-        return $this->establish();
+        return $this->establish($this->force);
     }
 
     /**
@@ -52,8 +62,8 @@ class DoctrinePostgresqlConnection extends AbstractPostgreSQLDriver implements C
     /**
      * @inheritDoc
      */
-    public function establish()
+    public function establish($force = false)
     {
-        return $this->connection->establish();
+        return $this->connection->establish($force);
     }
 }
