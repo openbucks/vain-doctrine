@@ -16,6 +16,7 @@ use Doctrine\ODM\MongoDB\Configuration as DoctrineODMConfiguration;
 use Vain\Core\Api\Extension\Storage\ApiExtensionStorageInterface;
 use Doctrine\Common\Cache\Cache as DoctrineCacheInterface;
 use Doctrine\ODM\MongoDB\Mapping\Driver\SimplifiedYamlDriver;
+use Doctrine\Common\Proxy\AbstractProxyFactory;
 
 /**
  * Class DoctrineODMConfigurationFactory
@@ -71,7 +72,7 @@ class DoctrineODMConfigurationFactory
         $config->setHydratorNamespace('Hydrators');
         $config->setMetadataDriverImpl($driver);
         $config->setMetadataCacheImpl($doctrineCache);
-        $config->setAutoGenerateProxyClasses('dev' === $applicationEnv);
+        $config->setAutoGenerateProxyClasses('dev' === $applicationEnv ? AbstractProxyFactory::AUTOGENERATE_ALWAYS : AbstractProxyFactory::AUTOGENERATE_NEVER);
 
         return $config;
     }
