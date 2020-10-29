@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Factory;
 
 use Doctrine\Common\Cache\Cache as DoctrineCacheInterface;
-use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
+use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\Configuration as DoctrineORMConfiguration;
 use Vain\Core\Api\Extension\Storage\ApiExtensionStorageInterface;
@@ -64,7 +64,7 @@ class DoctrineConfigurationFactory
         }
         $paths[$configDir] = '';
 
-        $driver = new SimplifiedYamlDriver($paths, $extension);
+        $driver = new SimplifiedXmlDriver($paths, $extension);
         $driver->setGlobalBasename($globalFileName);
 
         $config = Setup::createConfiguration(

@@ -15,7 +15,7 @@ namespace Vain\Doctrine\Factory;
 use Doctrine\ODM\MongoDB\Configuration as DoctrineODMConfiguration;
 use Vain\Core\Api\Extension\Storage\ApiExtensionStorageInterface;
 use Doctrine\Common\Cache\Cache as DoctrineCacheInterface;
-use Doctrine\ODM\MongoDB\Mapping\Driver\SimplifiedYamlDriver;
+use Doctrine\ODM\MongoDB\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 
 /**
@@ -62,7 +62,7 @@ class DoctrineODMConfigurationFactory
         }
         $paths[$configDir] = '';
 
-        $driver = new SimplifiedYamlDriver($paths, $extension);
+        $driver = new SimplifiedXmlDriver($paths, $extension);
         $driver->setGlobalBasename($globalFileName);
 
         $config = new DoctrineODMConfiguration();
