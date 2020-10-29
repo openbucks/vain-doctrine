@@ -2,7 +2,7 @@ parameters:
   doctrine.connection.name: 'doctrine'
   doctrine.database.name: 'doctrine'
   doctrine.entity.map.file: 'entitymap'
-  doctrine.entity.map.extension: '.orm.yml'
+  doctrine.entity.map.extension: '.orm.xml'
   doctrine.dir: 'doctrine'
   doctrine.proxy.name: 'Proxy'
 
@@ -10,7 +10,7 @@ parameters:
   doctrine.odm.database.name: 'mongo'
   doctrine.odm.dir: 'odm'
   doctrine.odm.map.file: 'entitymap'
-  doctrine.odm.map.extension: '.odm.yml'
+  doctrine.odm.map.extension: '.odm.xml'
 
 services:
   doctrine.entity.manager:

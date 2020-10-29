@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Document;
 
 use Doctrine\Common\EventManager;
-use Doctrine\MongoDB\Connection;
+use MongoDB\Client;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\ORMException;
@@ -37,23 +37,23 @@ class DoctrineDocumentManager extends DocumentManager
     /**
      * DoctrineDocumentManager constructor.
      *
-     * @param Connection           $conn
+     * @param Client               $client
      * @param Configuration        $config
      * @param EventManager         $eventManager
      * @param TimeFactoryInterface $timeFactory
      */
     protected function __construct(
-        Connection $conn,
+        Client $client,
         Configuration $config,
         EventManager $eventManager,
         TimeFactoryInterface $timeFactory
     ) {
         $this->timeFactory = $timeFactory;
-        parent::__construct($conn, $config, $eventManager);
+        parent::__construct($client, $config, $eventManager);
     }
 
     /**
-     * @param                      $conn
+     * @param                      $client
      * @param Configuration        $config
      * @param EventManager         $eventManager
      * @param TimeFactoryInterface $timeFactory
@@ -62,7 +62,7 @@ class DoctrineDocumentManager extends DocumentManager
      * @throws ORMException
      */
     public static function createWithTimeFactory(
-        $conn,
+        Client $client,
         Configuration $config,
         EventManager $eventManager,
         TimeFactoryInterface $timeFactory
@@ -71,18 +71,7 @@ class DoctrineDocumentManager extends DocumentManager
             throw ORMException::missingMappingDriverImpl();
         }
 
-        switch (true) {
-            case ($conn instanceof Connection):
-                if ($eventManager !== null && $conn->getEventManager() !== $eventManager) {
-                    throw ORMException::mismatchedEventManager();
-                }
-                break;
-
-            default:
-                throw new \InvalidArgumentException("Invalid argument: " . $conn);
-        }
-
-        return new DoctrineDocumentManager($conn, $config, $conn->getEventManager(), $timeFactory);
+        return new DoctrineDocumentManager($client, $config, $eventManager, $timeFactory);
     }
 
     /**

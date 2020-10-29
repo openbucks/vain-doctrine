@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace Vain\Doctrine\Factory;
 
 use Doctrine\Common\EventManager as DoctrineEventManager;
-use Doctrine\MongoDB\Connection;
+use MongoDB\Client;
 use Doctrine\ODM\MongoDB\Configuration;
 use Vain\Doctrine\Document\DoctrineDocumentManager;
 use Vain\Core\Time\Factory\TimeFactoryInterface;
@@ -106,7 +106,7 @@ class DoctrineDocumentManagerFactory
         $dsn = sprintf('mongodb://%s:%s@%s/', $username, $password, $connectionString);
         $configuration->setDefaultDB($configData['connections'][$connectionName]['dbname']);
         return DoctrineDocumentManager::createWithTimeFactory(
-            new Connection($dsn, $options, $configuration, $eventManager, $driverOptions),
+            new Client($dsn, $options, $driverOptions),
             $configuration,
             $eventManager,
             $timeFactory
