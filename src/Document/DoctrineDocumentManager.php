@@ -90,7 +90,7 @@ class DoctrineDocumentManager extends DocumentManager
     /**
      * @inheritDoc
      */
-    public function flush($document = null, array $options = [])
+    public function flush(array $options = [])
     {
         $this->flushLevel--;
 
@@ -102,7 +102,7 @@ class DoctrineDocumentManager extends DocumentManager
             throw new LevelIntegrityDoctrineException($this, $this->flushLevel);
         }
 
-        parent::flush($document);
+        parent::flush($options);
 
         return $this;
     }

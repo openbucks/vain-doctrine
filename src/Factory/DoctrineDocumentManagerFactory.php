@@ -106,7 +106,12 @@ class DoctrineDocumentManagerFactory
         $dsn = sprintf('mongodb://%s:%s@%s/', $username, $password, $connectionString);
         $configuration->setDefaultDB($configData['connections'][$connectionName]['dbname']);
         return DoctrineDocumentManager::createWithTimeFactory(
-            new Client($dsn, $options, $driverOptions),
+            new Client($dsn, $options, array_merge([], [
+                'typeMap' => DoctrineDocumentManager::CLIENT_TYPEMAP,
+                'driver' => [
+                    'name' => 'doctrine-odm'
+                ],
+            ], $driverOptions)),
             $configuration,
             $eventManager,
             $timeFactory
